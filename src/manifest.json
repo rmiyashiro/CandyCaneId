@@ -3,7 +3,6 @@
   "name": "CandyCaneId",
   "version": "0.0.1",
   "description": "Colorize ObjectIds to make them more distinctive and informative",
-  "permissions": ["activeTab"],
   "content_scripts": [
     {
       "js": ["content.js"],
