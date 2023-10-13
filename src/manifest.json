@@ -3,6 +3,9 @@
   "name": "CandyCaneId",
   "version": "0.0.1",
   "description": "Colorize ObjectIds to make them more distinctive and informative",
+  "action": {
+    "default_popup": "popup.html"
+  },
   "content_scripts": [
     {
       "js": ["content.js"],

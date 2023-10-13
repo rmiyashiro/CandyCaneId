@@ -1,15 +1,19 @@
 const OBJECT_ID_REGEX = /\b[0-9a-fA-F]{24}\b/g;
 const FIVE_YEARS = 1000 * 60 * 60 * 24 * 365 * 5; // 5 years in milliseconds
 
+let candyCaneIdStyles;
+
 function generateCss(objectIds) {
   if(objectIds && objectIds.length) {
-    const candyCaneIdStyles = document.createElement('style');
-    candyCaneIdStyles.textContent = ':root { --candycaneid-sat: 60%; --candycaneid-lum: 50%; --candycaneid-text: white;}\n' +
-      '.candycaneid-timestamp {color: var(--candycaneid-text);}\n' +
-      '.candycaneid-machine {color: var(--candycaneid-text);}\n' +
-      '.candycaneid-counter {color: var(--candycaneid-text);}\n' +
-      objectIds.map(generateObjectIdCss).join("\n");
-    document.head.appendChild(candyCaneIdStyles);
+    if(!candyCaneIdStyles) {
+      candyCaneIdStyles = document.createElement('style');
+      candyCaneIdStyles.textContent = ':root { --candycaneid-sat: 60%; --candycaneid-lum: 50%; --candycaneid-text: white;}\n' +
+        '.candycaneid-timestamp {color: var(--candycaneid-text);}\n' +
+        '.candycaneid-machine {color: var(--candycaneid-text);}\n' +
+        '.candycaneid-counter {color: var(--candycaneid-text);}\n';
+      document.head.appendChild(candyCaneIdStyles);
+    }
+    candyCaneIdStyles.textContent += objectIds.map(generateObjectIdCss).join("\n");
   }
 }
 
@@ -110,6 +114,14 @@ function colorizeObjectIds(root) {
   generateCss([...uniqueIds]);
 }
 
+chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+  if (request.action === 'candycaneidSaturation') {
+    document.querySelector(':root').style.setProperty('--candycaneid-sat', `${request.value}%`);
+  }
+  if (request.action === 'candycaneidLuminance') {
+    document.querySelector(':root').style.setProperty('--candycaneid-lum', `${request.value}%`);
+  }
+});
 
 // Observe changes to the DOM and apply colorization when new content is added
 const observer = new MutationObserver((mutationsList, observer) => {
