@@ -1,4 +1,33 @@
-const objectIdRegex = /\b[0-9a-fA-F]{24}\b/g;
+const OBJECT_ID_REGEX = /\b[0-9a-fA-F]{24}\b/g;
+const FIVE_YEARS = 1000 * 60 * 60 * 24 * 365 * 5; // 5 years in milliseconds
+
+function generateCss(objectIds) {
+  if(objectIds && objectIds.length) {
+    const candyCaneIdStyles = document.createElement('style');
+    candyCaneIdStyles.textContent = ':root { --candycaneid-sat: 60%; --candycaneid-lum: 50%; --candycaneid-text: white;}\n' +
+      '.candycaneid-timestamp {color: var(--candycaneid-text);}\n' +
+      '.candycaneid-machine {color: var(--candycaneid-text);}\n' +
+      '.candycaneid-counter {color: var(--candycaneid-text);}\n' +
+      objectIds.map(generateObjectIdCss).join("\n");
+    document.head.appendChild(candyCaneIdStyles);
+  }
+}
+
+function generateObjectIdCss(objectId) {
+  const timestamp = objectId.slice(0, 8); // 4 bytes
+  const machine = objectId.slice(8, 18); // 5 bytes
+  const counter = objectId.slice(18, 24); // 3 bytes
+
+  // Parse the date segment
+  const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
+
+  const ageBg = ageToColor(date);
+  const dayBg = dayToColor(date);
+  const machineBg = hashToColor(hashCode(machine));
+  const counterBg = hashToColor(hashCode(counter));
+
+  return `.candycaneid-${objectId} { border-radius: 2px; background-image: linear-gradient(110deg, ${ageBg} 10%, 13%, ${dayBg} 30%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
+}
 
 function hashCode(inputString) {
   let hash = 0;
@@ -20,19 +49,18 @@ function dayToColor(date) {
   const dayOfYear = (date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24);
 
   // Calculate the hue based on the day of the year with a shift
-  const hue = 180 - (dayOfYear / 365) * 240; // Map to hue (0-360)
+  const hue = (240 - (dayOfYear / 365) * 360) % 360
 
   return hueToColor(hue);
 }
 
 function ageToColor(date) {
   const now = new Date();
-  const timeDifference = now - date;
+  const timeDifference = Math.max(now - date, 0);
   
   // Calculate the hue based on the time difference
-  const maxDifference = 1000 * 60 * 60 * 24 * 365 * 5; // 5 years in milliseconds
-  const scaledDifference = Math.min(timeDifference, maxDifference); // Cap the difference
-  const hue = 120 + (scaledDifference / maxDifference) * 240; // Map to hue (120-360)
+  const scaledDifference = Math.min(timeDifference, FIVE_YEARS); // Cap the difference
+  const hue = 120 + (scaledDifference / FIVE_YEARS) * 240; // Map to hue (120-360)
 
   return hueToColor(hue);
 }
@@ -42,7 +70,7 @@ function hashToColor(hash) {
 }
 
 function hueToColor(hue) {
-  return `hsl(${hue}, 60%, 50%)`;
+  return `hsl(${hue}, var(--candycaneid-sat), var(--candycaneid-lum))`;
 }
 
 function collectObjectIds(root) {
@@ -52,7 +80,7 @@ function collectObjectIds(root) {
   let textNode;
   while ((textNode = walker.nextNode())) {
     const textContent = textNode.nodeValue;
-    if (objectIdRegex.test(textContent)) {
+    if (OBJECT_ID_REGEX.test(textContent)) {
       objectIds.push({ textNode, textContent });
     }
   }
@@ -60,28 +88,18 @@ function collectObjectIds(root) {
   return objectIds;
 }
 
-function getTextColorForBackground(b) {
-  return '#ffffff';
-}
-
 function colorizeObjectIds(root) {
-
+  const uniqueIds = new Set();
   const objectIds = collectObjectIds(root);
   objectIds.forEach(({textNode, textContent}) => {
-      const coloredText = textContent.replace(objectIdRegex, (match) => {
+      const coloredText = textContent.replace(OBJECT_ID_REGEX, (match) => {
+          uniqueIds.add(match);
           const timestamp = match.slice(0, 8); // 4 bytes
           const machine = match.slice(8, 18); // 5 bytes
           const counter = match.slice(18, 24); // 3 bytes
-
-          // Parse the date segment
           const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
 
-          const ageBg = ageToColor(date);
-          const dayBg = dayToColor(date);
-          const machineBg = hashToColor(hashCode(machine));
-          const counterBg = hashToColor(hashCode(counter));
-
-          return `<span title="${date}" style="border-radius: 2px; background-image: linear-gradient(110deg, ${ageBg} 10%, 13%, ${dayBg} 30%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%);"><span style="color: white">${timestamp}</span><span style="color: white">${machine}</span><span style="color: white">${counter}</span></span>`;
+          return `<span title="${date}" class="candycaneid-${match}"><span class="candycaneid-timestamp">${timestamp}</span><span class="candycaneid-machine">${machine}</span><span class="candycaneid-counter">${counter}</span></span>`;
           });
 
       const newNode = document.createElement("span");
@@ -89,6 +107,7 @@ function colorizeObjectIds(root) {
 
       textNode.parentNode.replaceChild(newNode, textNode);
   });
+  generateCss([...uniqueIds]);
 }
 
 

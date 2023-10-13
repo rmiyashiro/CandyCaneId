@@ -11,9 +11,8 @@
         "https://mongodb.org/*",
         "https://*.mongodb.com/*",
         "https://*.mongodb.org/*",
-        "https://*.google.com/*",
-        "https://*.github.com/*",
-        "http://localhost/*"
+        "http://localhost/*",
+        "file://*"
       ]
     }
   ],
