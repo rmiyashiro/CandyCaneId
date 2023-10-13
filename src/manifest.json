@@ -6,8 +6,16 @@
   "permissions": ["activeTab"],
   "content_scripts": [
     {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "matches": [
+        "https://mongodb.com/*",
+        "https://mongodb.org/*",
+        "https://*.mongodb.com/*",
+        "https://*.mongodb.org/*",
+        "https://*.google.com/*",
+        "https://*.github.com/*",
+        "http://localhost/*"
+      ]
     }
   ],
   "icons": {
