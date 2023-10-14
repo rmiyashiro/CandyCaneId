@@ -7,7 +7,7 @@ function generateCss(objectIds) {
   if(objectIds && objectIds.length) {
     if(!candyCaneIdStyles) {
       candyCaneIdStyles = document.createElement('style');
-      candyCaneIdStyles.textContent = ':root { --candycaneid-sat: 60%; --candycaneid-lum: 50%; --candycaneid-text: white;}\n' +
+      candyCaneIdStyles.textContent = ':root { --candycaneid-sat: 60%; --candycaneid-lit: 50%; --candycaneid-text: white;}\n' +
         '.candycaneid-timestamp {color: var(--candycaneid-text);}\n' +
         '.candycaneid-machine {color: var(--candycaneid-text);}\n' +
         '.candycaneid-counter {color: var(--candycaneid-text);}\n';
@@ -74,7 +74,7 @@ function hashToColor(hash) {
 }
 
 function hueToColor(hue) {
-  return `hsl(${hue}, var(--candycaneid-sat), var(--candycaneid-lum))`;
+  return `hsl(${hue}, var(--candycaneid-sat), var(--candycaneid-lit))`;
 }
 
 function collectObjectIds(root) {
@@ -118,8 +118,10 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'candycaneidSaturation') {
     document.querySelector(':root').style.setProperty('--candycaneid-sat', `${request.value}%`);
   }
-  if (request.action === 'candycaneidLuminance') {
-    document.querySelector(':root').style.setProperty('--candycaneid-lum', `${request.value}%`);
+  if (request.action === 'candycaneidLightness') {
+    const r = document.querySelector(':root')
+    r.style.setProperty('--candycaneid-lit', `${request.value}%`);
+    r.style.setProperty('--candycaneid-text', request.value > 60 ? 'black' : 'white');
   }
 });
 
