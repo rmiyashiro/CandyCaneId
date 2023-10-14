@@ -1,17 +1,57 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CandyCaneId</title>
-    <script src="popup.js"></script>
+  <title>CandyCaneId</title>
+  <script src="popup.js"></script>
+  <style>
+    body {
+      background-image: url('images/popup_bg.png');
+      background-repeat: no-repeat;
+      background-size: contain;
+      font-family: "Courier New", monospace;
+      color: black;
+      text-shadow: -1px 1px 0 white, 1px 1px 0 white, 1px -1px 0 white, -1px -1px 0 white;
+    }
+
+    h1 {
+    }
+
+    .slider-section {
+
+    }
+
+    .slider-label {
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .slider-label label {
+      margin-right: 1em;
+    }
+
+    .slider {
+      width: 95%;
+    }
+  </style>
 </head>
 <body>
-    <h1>CandyCaneId</h1>
+<h1>CandyCaneId</h1>
+<div class="slider-section">
+  <div class="slider-label">
     <label for="saturation">Saturation</label>
-    <input type="range" id="saturation" min="20" max="100" value="60">
     <input type="number" id="saturationNum" min="20" max="100"/>
+  </div>
+  <input class="slider" type="range" id="saturation" min="20" max="100" value="60">
+</div>
+<div class="slider-section">
+  <div class="slider-label">
     <label for="lightness">Lightness</label>
-    <input type="range" id="lightness" min="30" max="95" value="50">
     <input type="number" id="lightnessNum" min="30" max="95"/>
+  </div>
+  <input class="slider" type="range" id="lightness" min="30" max="95" value="50">
+</div>
 </body>
 </html>
 
