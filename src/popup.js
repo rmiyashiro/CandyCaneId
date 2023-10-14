@@ -26,6 +26,14 @@ function getLightnessNum() {
   return document.getElementById('lightnessNum');
 }
 
+function getAgeHueRange() {
+  return document.getElementById('ageHue');
+}
+
+function getSeasonHueRange() {
+  return document.getElementById('seasonHue');
+}
+
 function getMachineHueRange() {
   return document.getElementById('machineHue');
 }
@@ -69,7 +77,13 @@ function setLightness(lightness) {
 }
 
 function setHues(hues) {
-  const {machine, counter} = hues;
+  const {age, season, machine, counter} = hues;
+  if (age) {
+    getAgeHueRange().value = age.start;
+  }
+  if (season) {
+    getSeasonHueRange().value = season.start;
+  }
   if (machine) {
     getMachineHueRange().value = machine.start;
   }
@@ -112,6 +126,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   getLightnessNum().addEventListener('change', function (e) {
     setLightness(Number(e.target.value));
+  });
+
+  getAgeHueRange().addEventListener('change', function (e) {
+    setHues({age: {start: Number(e.target.value), range: 240}});
+  });
+
+  getSeasonHueRange().addEventListener('change', function (e) {
+    setHues({season: {start: Number(e.target.value), range: -360}});
   });
 
   getMachineHueRange().addEventListener('change', function (e) {
