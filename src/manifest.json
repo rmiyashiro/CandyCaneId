@@ -7,8 +7,12 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "storage"
+    "storage",
+    "activeTab"
   ],
+  "background": {
+    "service_worker": "background.js"
+  },
   "content_scripts": [
     {
       "js": [
@@ -21,7 +25,8 @@
         "https://*.mongodb.org/*",
         "http://localhost/*",
         "file://*"
-      ]
+      ],
+      "run_at": "document_start"
     }
   ],
   "icons": {

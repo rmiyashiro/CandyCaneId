@@ -14,17 +14,8 @@ function getLightnessNum() {
   return document.getElementById('lightnessNum');
 }
 
-function sendMessage({saturation, lightness}) {
-  chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
-    if (saturation) {
-      chrome.tabs.sendMessage(tabs[0].id,
-          {action: `candycaneid-saturation`, value: saturation});
-    }
-    if (lightness) {
-      chrome.tabs.sendMessage(tabs[0].id,
-          {action: `candycaneid-lightness`, value: lightness});
-    }
-  });
+function getEnabledCheckbox() {
+  return document.getElementById('enabled');
 }
 
 function updateSettings(settings) {
@@ -38,24 +29,35 @@ function updateSettings(settings) {
 function setSaturation(saturation) {
   getSaturationNum().value = saturation;
   getSaturationRange().value = saturation;
-  sendMessage({saturation});
   updateSettings({saturation});
 }
 
 function setLightness(lightness) {
   getLightnessNum().value = lightness;
   getLightnessRange().value = lightness;
-  sendMessage({lightness});
   updateSettings({lightness});
+}
+
+function setEnabled(enabled) {
+  getEnabledCheckbox().checked = enabled;
+  updateSettings({enabled});
+  document.getElementById('body').classList.toggle('enabled', enabled);
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
   chrome.storage.local.get(
-      {candycaneidSettings: {saturation: 50, lightness: 60}}).then(
+      {
+        candycaneidSettings: {
+          saturation: 50,
+          lightness: 60,
+          enabled: true
+        }
+      }).then(
       ({candycaneidSettings}) => {
-        const {saturation, lightness} = candycaneidSettings;
+        const {saturation, lightness, enabled} = candycaneidSettings;
         setSaturation(saturation);
         setLightness(lightness);
+        setEnabled(enabled);
       });
 
   getSaturationRange().addEventListener('change', function (e) {
@@ -72,6 +74,10 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   getLightnessNum().addEventListener('change', function (e) {
     setLightness(e.target.value);
+  });
+
+  getEnabledCheckbox().addEventListener('change', function (e) {
+    setEnabled(!!e.target.checked);
   });
 });
 

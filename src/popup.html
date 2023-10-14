@@ -11,13 +11,21 @@
       font-family: "Courier New", monospace;
       color: black;
       text-shadow: -1px 1px 0 white, 1px 1px 0 white, 1px -1px 0 white, -1px -1px 0 white;
+      background-color: #FFF;
+      background-blend-mode: luminosity, normal;
+      transition: background-color 0.6s;
+    }
+
+    body.enabled {
+      background-color: transparent;
+      transition: background-color 0.6s;
     }
 
     h1 {
     }
 
     .slider-section {
-
+      margin-bottom: 5px;
     }
 
     .slider-label {
@@ -34,9 +42,25 @@
     .slider {
       width: 95%;
     }
+
+    .enabled-section {
+      display: flex;
+      font-weight: bold;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+    }
+
+    .enabled-section:hover {
+      background-color: #EEEEEE;
+    }
+
+    .enabled-section *:hover {
+      cursor: pointer;
+    }
   </style>
 </head>
-<body>
+<body id="body">
 <h1>CandyCaneId</h1>
 <div class="slider-section">
   <div class="slider-label">
@@ -51,6 +75,10 @@
     <input type="number" id="lightnessNum" min="30" max="95"/>
   </div>
   <input class="slider" type="range" id="lightness" min="30" max="95" value="50">
+</div>
+<div class="enabled-section">
+  <label for="enabled">Enabled</label>
+  <input type="checkbox" id="enabled" checked/>
 </div>
 </body>
 </html>

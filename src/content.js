@@ -5,6 +5,7 @@ const CSS_LIGHTNESS = '--candycaneid-lit';
 const CSS_TEXT = '--candycaneid-text';
 
 let candyCaneIdStyles;
+let candyCaneIdEnabled = false;
 
 function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
@@ -20,6 +21,26 @@ function generateCss(objectIds) {
     candyCaneIdStyles.textContent += objectIds.map(generateObjectIdCss).join(
         "\n");
   }
+}
+
+function clearCss() {
+  if (candyCaneIdStyles) {
+    candyCaneIdStyles.remove();
+    candyCaneIdStyles = undefined;
+  }
+}
+
+function regenerateCss() {
+  clearCss();
+  const ids = document.body.getElementsByClassName('candycaneid');
+  const objectids = new Set();
+  for (let i = 0; i < ids.length; i++) {
+    const oid = ids[i].getAttribute('objectid');
+    if (oid) {
+      objectids.add(oid);
+    }
+  }
+  generateCss([...objectids]);
 }
 
 function setSaturation(saturation) {
@@ -124,7 +145,7 @@ function colorizeObjectIds(root) {
       const counter = match.slice(18, 24); // 3 bytes
       const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
 
-      return `<span title="${date}" class="candycaneid-${match}"><span class="candycaneid-timestamp">${timestamp}</span><span class="candycaneid-machine">${machine}</span><span class="candycaneid-counter">${counter}</span></span>`;
+      return `<span title="${date}" class="candycaneid candycaneid-${match}" objectid="${match}"><span class="candycaneid-timestamp">${timestamp}</span><span class="candycaneid-machine">${machine}</span><span class="candycaneid-counter">${counter}</span></span>`;
     });
 
     const newNode = document.createElement("span");
@@ -132,7 +153,9 @@ function colorizeObjectIds(root) {
 
     textNode.parentNode.replaceChild(newNode, textNode);
   });
-  generateCss([...uniqueIds]);
+  if (candyCaneIdEnabled) {
+    generateCss([...uniqueIds]);
+  }
 }
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
@@ -141,6 +164,16 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   if (request.action === 'candycaneid-lightness') {
     setLightness(request.value);
+  }
+  if (request.action === 'candycaneid-enabled') {
+    if (candyCaneIdEnabled !== request.value) {
+      candyCaneIdEnabled = request.value;
+      if (candyCaneIdEnabled) {
+        regenerateCss();
+      } else {
+        clearCss();
+      }
+    }
   }
 });
 
@@ -157,15 +190,9 @@ const observer = new MutationObserver((mutationsList, observer) => {
   }
 });
 
-observer.observe(document.body, {childList: true, subtree: true});
+document.addEventListener("DOMContentLoaded", function () {
+  colorizeObjectIds(document.body);
+  observer.observe(document.body, {childList: true, subtree: true});
+  chrome.runtime.sendMessage({candycaneidLoaded: true});
+});
 
-chrome.storage.local.get(
-    {candycaneidSettings: {saturation: 50, lightness: 60}}).then(
-    ({candycaneidSettings}) => {
-      const {saturation, lightness} = candycaneidSettings;
-      setSaturation(saturation);
-      setLightness(lightness);
-    });
-
-// Apply colorization to existing content
-colorizeObjectIds(document.body);
