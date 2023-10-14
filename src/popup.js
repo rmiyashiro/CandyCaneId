@@ -5,8 +5,8 @@ const DEFAULT_SETTINGS = {
     machine: {start: 0, range: 360},
     counter: {start: 0, range: 360}
   },
-  saturation: 50,
-  lightness: 60,
+  saturation: 60,
+  lightness: 50,
   enabled: true
 };
 
@@ -47,7 +47,7 @@ function getEnabledCheckbox() {
 }
 
 function updateSettings(settings) {
-  chrome.storage.local.get({candycaneidSettings: {}}).then(
+  chrome.storage.local.get({candycaneidSettings: DEFAULT_SETTINGS}).then(
       ({candycaneidSettings}) => {
         const {hues} = settings;
         chrome.storage.local.set(
@@ -99,17 +99,21 @@ function setEnabled(enabled) {
   document.getElementById('body').classList.toggle('enabled', enabled);
 }
 
+function initialize(settings) {
+  const {saturation, lightness, enabled, hues} = settings;
+  setSaturation(saturation);
+  setLightness(lightness);
+  setHues(hues);
+  setEnabled(enabled);
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
   chrome.storage.local.get(
       {
         candycaneidSettings: DEFAULT_SETTINGS
       }).then(
       ({candycaneidSettings}) => {
-        const {saturation, lightness, enabled, hues} = candycaneidSettings;
-        setSaturation(saturation);
-        setLightness(lightness);
-        setHues(hues);
-        setEnabled(enabled);
+        initialize(candycaneidSettings);
       });
 
   getSaturationRange().addEventListener('change', function (e) {
@@ -146,6 +150,11 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   getEnabledCheckbox().addEventListener('change', function (e) {
     setEnabled(!!e.target.checked);
+  });
+
+  document.getElementById('title').addEventListener('dblclick', function () {
+    chrome.storage.local.set({candycaneidSettings: DEFAULT_SETTINGS});
+    initialize(DEFAULT_SETTINGS);
   });
 });
 
