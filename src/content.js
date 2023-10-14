@@ -1,5 +1,8 @@
 const OBJECT_ID_REGEX = /\b[0-9a-fA-F]{24}\b/g;
 const FIVE_YEARS = 1000 * 60 * 60 * 24 * 365 * 5; // 5 years in milliseconds
+const CSS_SATURATION = '--candycaneid-sat';
+const CSS_LIGHTNESS = '--candycaneid-lit';
+const CSS_TEXT = '--candycaneid-text';
 
 let candyCaneIdStyles;
 
@@ -7,16 +10,28 @@ function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
     if (!candyCaneIdStyles) {
       candyCaneIdStyles = document.createElement('style');
-      candyCaneIdStyles.textContent = ':root { --candycaneid-sat: 60%; --candycaneid-lit: 50%; --candycaneid-text: white;}\n'
+      candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_TEXT}: white;}\n`
           +
-          '.candycaneid-timestamp {color: var(--candycaneid-text);}\n' +
-          '.candycaneid-machine {color: var(--candycaneid-text);}\n' +
-          '.candycaneid-counter {color: var(--candycaneid-text);}\n';
+          `.candycaneid-timestamp {color: var(${CSS_TEXT});}\n` +
+          `.candycaneid-machine {color: var(${CSS_TEXT});}\n` +
+          `.candycaneid-counter {color: var(${CSS_TEXT});}\n`;
       document.head.appendChild(candyCaneIdStyles);
     }
     candyCaneIdStyles.textContent += objectIds.map(generateObjectIdCss).join(
         "\n");
   }
+}
+
+function setSaturation(saturation) {
+  const r = document.querySelector(':root');
+  r.style.setProperty(CSS_SATURATION, `${saturation}%`);
+}
+
+function setLightness(lightness) {
+  const r = document.querySelector(':root');
+  r.style.setProperty(CSS_LIGHTNESS, `${lightness}%`);
+  r.style.setProperty(CSS_TEXT,
+      lightness > 60 ? 'black' : 'white');
 }
 
 function generateObjectIdCss(objectId) {
@@ -79,7 +94,7 @@ function hashToColor(hash) {
 }
 
 function hueToColor(hue) {
-  return `hsl(${hue}, var(--candycaneid-sat), var(--candycaneid-lit))`;
+  return `hsl(${hue}, var(${CSS_SATURATION}), var(${CSS_LIGHTNESS}))`;
 }
 
 function collectObjectIds(root) {
@@ -122,14 +137,10 @@ function colorizeObjectIds(root) {
 
 chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'candycaneid-saturation') {
-    document.querySelector(':root').style.setProperty('--candycaneid-sat',
-        `${request.value}%`);
+    setSaturation(request.value);
   }
   if (request.action === 'candycaneid-lightness') {
-    const r = document.querySelector(':root');
-    r.style.setProperty('--candycaneid-lit', `${request.value}%`);
-    r.style.setProperty('--candycaneid-text',
-        request.value > 60 ? 'black' : 'white');
+    setLightness(request.value);
   }
 });
 
@@ -151,10 +162,9 @@ observer.observe(document.body, {childList: true, subtree: true});
 chrome.storage.local.get(
     {candycaneidSettings: {saturation: 50, lightness: 60}}).then(
     ({candycaneidSettings}) => {
-      const r = document.querySelector(':root');
       const {saturation, lightness} = candycaneidSettings;
-      r.style.setProperty('--candycaneid-sat', `${saturation}%`);
-      r.style.setProperty('--candycaneid-lit', `${lightness}%`);
+      setSaturation(saturation);
+      setLightness(lightness);
     });
 
 // Apply colorization to existing content
