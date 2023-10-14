@@ -11,9 +11,13 @@ colorizes them in a way that is more distinguishable and actually conveys some u
 As plain hexadecimal strings, ObjectId values tend to all look the same which makes it easy to
 confuse them with each other and more difficult to remember them over time.
 
+![before](assets/before.png)
+
 By visualizing ObjectIds as uniquely colored blocks they suddenly become recognizable entities. It
 is immediately obvious when two ObjectIds are the same or different. And commonly seen ObjectIds are
 more memorable and familiar.
+
+![after](assets/after.png)
 
 ## Install
 
