@@ -14,6 +14,14 @@ function getLightnessNum() {
   return document.getElementById('lightnessNum');
 }
 
+function getMachineHueRange() {
+  return document.getElementById('machineHue');
+}
+
+function getCounterHueRange() {
+  return document.getElementById('counterHue');
+}
+
 function getEnabledCheckbox() {
   return document.getElementById('enabled');
 }
@@ -21,8 +29,18 @@ function getEnabledCheckbox() {
 function updateSettings(settings) {
   chrome.storage.local.get({candycaneidSettings: {}}).then(
       ({candycaneidSettings}) => {
+        const {hues} = settings;
         chrome.storage.local.set(
-            {candycaneidSettings: {...candycaneidSettings, ...settings}});
+            {
+              candycaneidSettings: {
+                ...candycaneidSettings,
+                ...settings,
+                hues: {
+                  ...candycaneidSettings.hues,
+                  ...hues
+                }
+              }
+            });
       });
 }
 
@@ -36,6 +54,17 @@ function setLightness(lightness) {
   getLightnessNum().value = lightness;
   getLightnessRange().value = lightness;
   updateSettings({lightness});
+}
+
+function setHues(hues) {
+  const {machine, counter} = hues;
+  if (machine) {
+    getMachineHueRange().value = machine.start;
+  }
+  if (counter) {
+    getCounterHueRange().value = counter.start;
+  }
+  updateSettings({hues});
 }
 
 function setEnabled(enabled) {
@@ -54,9 +83,10 @@ document.addEventListener('DOMContentLoaded', async function () {
         }
       }).then(
       ({candycaneidSettings}) => {
-        const {saturation, lightness, enabled} = candycaneidSettings;
+        const {saturation, lightness, enabled, hues} = candycaneidSettings;
         setSaturation(saturation);
         setLightness(lightness);
+        setHues(hues);
         setEnabled(enabled);
       });
 
@@ -74,6 +104,14 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   getLightnessNum().addEventListener('change', function (e) {
     setLightness(e.target.value);
+  });
+
+  getMachineHueRange().addEventListener('change', function (e) {
+    setHues({machine: {start: e.target.value, range: 360}});
+  });
+
+  getCounterHueRange().addEventListener('change', function (e) {
+    setHues({counter: {start: e.target.value, range: 360}});
   });
 
   getEnabledCheckbox().addEventListener('change', function (e) {

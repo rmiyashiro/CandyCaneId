@@ -8,7 +8,7 @@ const CSS_TEXT = '--candycaneid-text';
 let candyCaneIdStyles;
 let candyCaneIdEnabled = false;
 
-const hueRanges = {
+let hueRanges = {
   age: {start: 120, range: 240},
   season: {start: 240, range: -360},
   machine: {start: 0, range: 360},
@@ -61,6 +61,13 @@ function setLightness(lightness) {
   r.style.setProperty(CSS_LIGHTNESS, `${lightness}%`);
   r.style.setProperty(CSS_TEXT,
       lightness > 60 ? 'black' : 'white');
+}
+
+function setHues(hues) {
+  hueRanges = {...hueRanges, ...hues};
+  if (candyCaneIdEnabled) {
+    regenerateCss();
+  }
 }
 
 function generateObjectIdCss(objectId) {
@@ -178,6 +185,9 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   }
   if (request.action === 'candycaneid-lightness') {
     setLightness(request.value);
+  }
+  if (request.action === 'candycaneid-hues') {
+    setHues(request.value);
   }
   if (request.action === 'candycaneid-enabled') {
     if (candyCaneIdEnabled !== request.value) {

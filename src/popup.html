@@ -22,20 +22,34 @@
     }
 
     h1 {
+
     }
 
-    .slider-section {
+    h2 {
+      text-align: center;
+      font-size: 1.3em;
+      margin-top: 5px;
       margin-bottom: 5px;
     }
 
-    .slider-label {
+    .hues {
+      border-top: 1px solid #DDD;
+      border-bottom: 1px solid #DDD;
+      margin-bottom: 8px;
+    }
+
+    .control-section {
+      margin-bottom: 5px;
+    }
+
+    .control-label {
       display: flex;
       font-weight: bold;
       align-items: center;
       justify-content: space-between;
     }
 
-    .slider-label label {
+    .control-label label {
       margin-right: 1em;
     }
 
@@ -62,19 +76,34 @@
 </head>
 <body id="body">
 <h1>CandyCaneId</h1>
-<div class="slider-section">
-  <div class="slider-label">
+<div class="control-section">
+  <div class="control-label">
     <label for="saturation">Saturation</label>
     <input type="number" id="saturationNum" min="20" max="100"/>
   </div>
   <input class="slider" type="range" id="saturation" min="20" max="100" value="60">
 </div>
-<div class="slider-section">
-  <div class="slider-label">
+<div class="control-section">
+  <div class="control-label">
     <label for="lightness">Lightness</label>
     <input type="number" id="lightnessNum" min="30" max="95"/>
   </div>
   <input class="slider" type="range" id="lightness" min="30" max="95" value="50">
+</div>
+<div class="hues">
+  <h2>Hues</h2>
+  <div class="control-section">
+    <div class="control-label">
+      <label for="machineHue">Machine</label>
+    </div>
+    <input class="slider" type="range" id="machineHue" min="0" max="360" value="0">
+  </div>
+  <div class="control-section">
+    <div class="control-label">
+      <label for="counterHue">Counter</label>
+    </div>
+    <input class="slider" type="range" id="counterHue" min="0" max="360" value="0">
+  </div>
 </div>
 <div class="enabled-section">
   <label for="enabled">Enabled</label>
