@@ -15,7 +15,9 @@ confuse them with each other and more difficult to remember them over time.
 
 By visualizing ObjectIds as uniquely colored blocks they suddenly become recognizable entities. It
 is immediately obvious when two ObjectIds are the same or different. And commonly seen ObjectIds are
-more memorable and familiar.
+more memorable and familiar. Anecdotally, the vividness of the colors also contributes as well. If a
+color pattern is particularly interesting or appealing or weird, the emotion it evokes can make it
+more memorable.
 
 ![after](assets/after.png)
 
@@ -95,3 +97,20 @@ Click on the extension icon to adjust the settings to your liking:
   that doesn't involve a DOM change.
 - If the extension seems to be misbehaving, try double-clicking on the "CandyCaneId" title in the
   extension dropdown to factory reset it.
+
+## FAQ
+
+- Why 4 colors?
+    - I originally started with 3, one per section of the ObjectId, and then threw in the age color
+      on the tip. In testing, I felt like 3 colors made it too easy for collisions to happen. But I
+      also wanted to keep the number of bands as small as possible under the assumption that this
+      would make a particular color pattern easier to recognize and remember. I also liked the idea
+      of the color bands correlating with the actual structure of the ObjectId. That said, it would
+      be interesting to experiment with different colors/patterns to see what is most
+      distinguishable.
+- Why not replace the ObjectId text itself with something even more memorable, like a short word or
+  phrase?
+    - Since ObjectIds can appear in many places where this extension can't reach (e.g. local files,
+      Slack or other programs), I felt it was important that the actual hexadecimal text of the
+      ObjectId remain intact so it can still be compared outside the browser. Otherwise this would
+      only add confusion.
