@@ -1,3 +1,15 @@
+const DEFAULT_SETTINGS = {
+  hues: {
+    age: {start: 120, range: 240},
+    season: {start: 240, range: -360},
+    machine: {start: 0, range: 360},
+    counter: {start: 0, range: 360}
+  },
+  saturation: 50,
+  lightness: 60,
+  enabled: true
+};
+
 function getSaturationRange() {
   return document.getElementById('saturation');
 }
@@ -76,11 +88,7 @@ function setEnabled(enabled) {
 document.addEventListener('DOMContentLoaded', async function () {
   chrome.storage.local.get(
       {
-        candycaneidSettings: {
-          saturation: 50,
-          lightness: 60,
-          enabled: true
-        }
+        candycaneidSettings: DEFAULT_SETTINGS
       }).then(
       ({candycaneidSettings}) => {
         const {saturation, lightness, enabled, hues} = candycaneidSettings;
@@ -91,27 +99,27 @@ document.addEventListener('DOMContentLoaded', async function () {
       });
 
   getSaturationRange().addEventListener('change', function (e) {
-    setSaturation(e.target.value);
+    setSaturation(Number(e.target.value));
   });
 
   getLightnessRange().addEventListener('change', function (e) {
-    setLightness(e.target.value);
+    setLightness(Number(e.target.value));
   });
 
   getSaturationNum().addEventListener('change', function (e) {
-    setSaturation(e.target.value);
+    setSaturation(Number(e.target.value));
   });
 
   getLightnessNum().addEventListener('change', function (e) {
-    setLightness(e.target.value);
+    setLightness(Number(e.target.value));
   });
 
   getMachineHueRange().addEventListener('change', function (e) {
-    setHues({machine: {start: e.target.value, range: 360}});
+    setHues({machine: {start: Number(e.target.value), range: 360}});
   });
 
   getCounterHueRange().addEventListener('change', function (e) {
-    setHues({counter: {start: e.target.value, range: 360}});
+    setHues({counter: {start: Number(e.target.value), range: 360}});
   });
 
   getEnabledCheckbox().addEventListener('change', function (e) {
