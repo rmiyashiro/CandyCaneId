@@ -38,24 +38,24 @@ Since [ObjectIds have a structure of 3 parts](https://www.mongodb.com/docs/manua
 The first 4 bytes of an ObjectId encode the timestamp when it was originally created. This
 information is used to create 2 bands of color at the front of the ObjectId:
 
-- The left-most tip is colored based on the *age* of the ObjectId. By default, recently created
+- The left-most tip is colored based on the **age** of the ObjectId. By default, recently created
   ObjectIds will have a green tip. Older ObjectIds will be more blue, then purple, then red once an
   ObjectId is 5 years old or more.
-- The second band of color represents the time of year or *season* when the ObjectId was created.
+- The second band of color represents the time of year or **season** when the ObjectId was created.
   This is done by taking the time within the given year of creation and modulating it over the color
   wheel. By default, the colors are mapped such that winter looks blue, spring looks green, summer
   looks yellow/orange, and fall looks red/purple.
 
 #### Part 2: Machine/Process
 
-The middle 5 bytes of an ObjectId are a random and unique value representing the machine and process
-that created it. This is simply hashed and modulated over the color wheel to select a color. This
-means that ObjectIds created by the same process will have the exact same color in the middle. Not
-terribly useful, but mildly interesting.
+The middle 5 bytes of an ObjectId are a random and unique value representing the **machine** and
+process that created it. This is simply hashed and modulated over the color wheel to select a color.
+This means that ObjectIds created by the same process will have the exact same color in the middle.
+Not terribly useful, but mildly interesting.
 
 #### Part 3: Counter
 
-The last 3 bytes of an ObjectId are a just an incrementing counter to ensure uniqueness when the
+The last 3 bytes of an ObjectId are a just an incrementing **counter** to ensure uniqueness when the
 same process generates multiple ObjectIds within the same second. Again, this is simply hashed and
 modulated over the color wheel to select a color. This counter doesn't really convey any information
 so neither does the color.
@@ -66,7 +66,7 @@ Click on the extension icon to adjust the settings to your liking:
 
 - Use Saturation and Lightness sliders to adjust the intensity of the colors
 - Use Hue sliders to shift the hue spectrum for each band of color.
-    - NOTE: Moving the *Age* or *Season* sliders will disrupt the documented and meticulously
+    - NOTE: Moving the **Age** or **Season** sliders will disrupt the documented and meticulously
       hand-crafted color mapping, but you do you.
 - Toggle the Enabled checkbox to turn the colorization on/off
 - Double-click on the "CandyCaneId" title to factory reset the extension
