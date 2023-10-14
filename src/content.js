@@ -1,11 +1,19 @@
 const OBJECT_ID_REGEX = /\b[0-9a-fA-F]{24}\b/g;
-const FIVE_YEARS = 1000 * 60 * 60 * 24 * 365 * 5; // 5 years in milliseconds
+const ONE_DAY = 1000 * 60 * 60 * 24;
+const FIVE_YEARS = ONE_DAY * 365 * 5;
 const CSS_SATURATION = '--candycaneid-sat';
 const CSS_LIGHTNESS = '--candycaneid-lit';
 const CSS_TEXT = '--candycaneid-text';
 
 let candyCaneIdStyles;
 let candyCaneIdEnabled = false;
+
+const hueRanges = {
+  age: {start: 120, range: 240},
+  season: {start: 240, range: -360},
+  machine: {start: 0, range: 360},
+  counter: {start: 0, range: 360}
+}
 
 function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
@@ -65,8 +73,8 @@ function generateObjectIdCss(objectId) {
 
   const ageBg = ageToColor(date);
   const dayBg = dayToColor(date);
-  const machineBg = hashToColor(hashCode(machine));
-  const counterBg = hashToColor(hashCode(counter));
+  const machineBg = machineToColor(machine);
+  const counterBg = counterToColor(counter);
 
   return `.candycaneid-${objectId} { border-radius: 2px; background-image: linear-gradient(110deg, ${ageBg} 10%, 13%, ${dayBg} 30%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
 }
@@ -88,30 +96,36 @@ function hashCode(inputString) {
   return hash;
 }
 
-function dayToColor(date) {
-  // Get the day of the year (0-365)
-  const dayOfYear = (date - new Date(date.getFullYear(), 0, 0)) / (1000 * 60
-      * 60 * 24);
-
-  // Calculate the hue based on the day of the year with a shift
-  const hue = (240 - (dayOfYear / 365) * 360) % 360
-
-  return hueToColor(hue);
-}
-
 function ageToColor(date) {
   const now = new Date();
   const timeDifference = Math.max(now - date, 0);
 
   // Calculate the hue based on the time difference
   const scaledDifference = Math.min(timeDifference, FIVE_YEARS); // Cap the difference
-  const hue = 120 + (scaledDifference / FIVE_YEARS) * 240; // Map to hue (120-360)
 
-  return hueToColor(hue);
+  return hueFractionToColor(scaledDifference / FIVE_YEARS, hueRanges.age);
 }
 
-function hashToColor(hash) {
-  return hueToColor((Math.abs(hash) % 360)); // Use the hash as the hue value
+function dayToColor(date) {
+  // Get the day of the year (0-365)
+  const dayOfYear = (date - new Date(date.getFullYear(), 0, 0)) / ONE_DAY;
+  return hueFractionToColor(dayOfYear / 365, hueRanges.season);
+}
+
+function hashToColor(str, hueRange) {
+  return hueFractionToColor(Math.abs(hashCode(str)) % 360 / 360, hueRange);
+}
+
+function machineToColor(machine) {
+  return hashToColor(machine, hueRanges.machine);
+}
+
+function counterToColor(counter) {
+  return hashToColor(counter, hueRanges.counter);
+}
+
+function hueFractionToColor(fraction, {start, range}) {
+  return hueToColor((((start + fraction * range) % 360) + 360) % 360);
 }
 
 function hueToColor(hue) {
