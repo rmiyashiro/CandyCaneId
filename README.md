@@ -43,10 +43,15 @@ information is used to create 2 bands of color at the front of the ObjectId:
 - The left-most tip is colored based on the **age** of the ObjectId. By default, recently created
   ObjectIds will have a green tip. Older ObjectIds will be more blue, then purple, then red once an
   ObjectId is 5 years old or more.
+
+![age](assets/age.png)
+
 - The second band of color represents the time of year or **season** when the ObjectId was created.
   This is done by taking the time within the given year of creation and modulating it over the color
   wheel. By default, the colors are mapped such that winter looks blue, spring looks green, summer
   looks yellow/orange, and fall looks red/purple.
+
+![season](assets/season.png)
 
 #### Part 2: Machine/Process
 
