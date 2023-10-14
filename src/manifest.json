@@ -11,7 +11,9 @@
   ],
   "content_scripts": [
     {
-      "js": ["content.js"],
+      "js": [
+        "content.js"
+      ],
       "matches": [
         "https://mongodb.com/*",
         "https://mongodb.org/*",

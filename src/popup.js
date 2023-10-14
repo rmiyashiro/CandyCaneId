@@ -1,58 +1,77 @@
 function getSaturationRange() {
-    return document.getElementById('saturation');
+  return document.getElementById('saturation');
 }
 
 function getLightnessRange() {
-    return document.getElementById('lightness');
+  return document.getElementById('lightness');
 }
 
 function getSaturationNum() {
-    return document.getElementById('saturationNum');
+  return document.getElementById('saturationNum');
 }
 
 function getLightnessNum() {
-    return document.getElementById('lightnessNum');
+  return document.getElementById('lightnessNum');
 }
 
-function sendMessage(action, value) {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-        chrome.tabs.sendMessage(tabs[0].id, { action, value });
-    });
+function sendMessage({saturation, lightness}) {
+  chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+    if (saturation) {
+      chrome.tabs.sendMessage(tabs[0].id,
+          {action: `candycaneid-saturation`, value: saturation});
+    }
+    if (lightness) {
+      chrome.tabs.sendMessage(tabs[0].id,
+          {action: `candycaneid-lightness`, value: lightness});
+    }
+  });
 }
 
 function updateSettings(settings) {
-    chrome.storage.local.set({candycaneidSettings: settings});
+  chrome.storage.local.get({candycaneidSettings: {}}).then(
+      ({candycaneidSettings}) => {
+        chrome.storage.local.set(
+            {candycaneidSettings: {...candycaneidSettings, ...settings}});
+      });
+}
+
+function setSaturation(saturation) {
+  getSaturationNum().value = saturation;
+  getSaturationRange().value = saturation;
+  sendMessage({saturation});
+  updateSettings({saturation});
+}
+
+function setLightness(lightness) {
+  getLightnessNum().value = lightness;
+  getLightnessRange().value = lightness;
+  sendMessage({lightness});
+  updateSettings({lightness});
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
-    const saturation = getSaturationRange();
-    const lightness = getLightnessRange();
-    const saturationNum = getSaturationNum();
-    const lightnessNum = getLightnessNum();
+  chrome.storage.local.get(
+      {candycaneidSettings: {saturation: 50, lightness: 60}}).then(
+      ({candycaneidSettings}) => {
+        const {saturation, lightness} = candycaneidSettings;
+        setSaturation(saturation);
+        setLightness(lightness);
+      });
 
-    const storage = await chrome.storage.local.get({candycaneidSettings: {saturation: 50, lightness: 60}});
-    const settings = storage.candycaneidSettings;
-    saturation.value = saturationNum.value = settings.saturation;
-    lightness.value = lightnessNum.value = settings.lightness;
+  getSaturationRange().addEventListener('change', function (e) {
+    setSaturation(e.target.value);
+  });
 
-    saturation.addEventListener('change', function () {
-        saturationNum.value = saturation.value;
-        sendMessage('candycaneidSaturation', saturation.value);
-    });
+  getLightnessRange().addEventListener('change', function (e) {
+    setLightness(e.target.value);
+  });
 
-    lightness.addEventListener('change', function () {
-        lightnessNum.value = lightness.value;
-        sendMessage('candycaneidLightness', lightness.value);
-    });
+  getSaturationNum().addEventListener('change', function (e) {
+    setSaturation(e.target.value);
+  });
 
-    saturationNum.addEventListener('change', function () {
-        saturation.value = saturationNum.value;
-        sendMessage('candycaneidSaturation', saturation.value);
-    });
-
-    lightnessNum.addEventListener('change', function () {
-        lightness.value = lightnessNum.value;
-        sendMessage('candycaneidLightness', lightness.value);
-    });
+  getLightnessNum().addEventListener('change', function (e) {
+    setLightness(e.target.value);
+  });
 });
 
