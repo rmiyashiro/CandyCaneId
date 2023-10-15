@@ -85,7 +85,7 @@ function generateObjectIdCss(objectId) {
   const machineBg = machineToColor(machine);
   const counterBg = counterToColor(counter);
 
-  return `.candycaneid-${objectId} { border-radius: 2px; background-image: linear-gradient(110deg, ${ageBg} 10%, 13%, ${dayBg} 30%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
+  return `.candycaneid-${objectId} { border-radius: 2px; background-image: linear-gradient(110deg, ${ageBg} 10%, 13%, ${dayBg} 16%, ${dayBg} 19%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
 }
 
 function hashCode(inputString) {
