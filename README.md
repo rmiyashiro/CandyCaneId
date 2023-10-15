@@ -2,7 +2,7 @@
 
 Chrome extension for making ObjectIds more identifiable.
 
-## How It Works
+## 🍬 How It Works
 
 This extension searches the page for
 any [MongoDB ObjectId](https://www.mongodb.com/docs/manual/reference/method/ObjectId/) strings and
@@ -21,26 +21,26 @@ more memorable.
 
 ![after](assets/after.png)
 
-## Features
+## 🍭 Features
 
-### View the Creation Date
+### 🕛 View the Creation Date
 
 With this extension installed, you can hover over any ObjectId to see when it was originally
 created (in your browser's timezone).
 
-### Colorization as Data Visualization
+### 📊 Colorization as Data Visualization
 
 In addition to being more recognizable, the colors themselves also convey a small amount of
 information.
 Since [ObjectIds have a structure of 3 parts](https://www.mongodb.com/docs/manual/reference/method/ObjectId/)
 , these parts are used as the basis for the bands of color.
 
-#### Part 1: Creation Date
+#### 🕐 Part 1: Creation Date
 
 The first 4 bytes of an ObjectId encode the timestamp when it was originally created. This
 information is used to create 2 bands of color at the front of the ObjectId:
 
-##### Age
+##### ⏳ Age
 
 The left-most tip is colored based on the **age** of the ObjectId. By default, recently created
 ObjectIds will have a green tip. Older ObjectIds will be more blue, then purple, then red once an
@@ -48,7 +48,7 @@ ObjectId is 5 years old or more.
 
 ![age](assets/age.png)
 
-##### Season
+##### ❄️ Season
 
 The second band of color represents the time of year or **season** when the ObjectId was created.
 This is done by taking the time within the given year of creation and modulating it over the color
@@ -57,21 +57,21 @@ looks yellow/orange, and fall looks red/purple.
 
 ![season](assets/season.png)
 
-#### Part 2: Machine/Process
+#### 🤖 Part 2: Machine/Process
 
 The middle 5 bytes of an ObjectId are a random and unique value representing the **machine** and
 process that created it. This is simply hashed and modulated over the color wheel to select a color.
 This means that ObjectIds created by the same process will have the exact same color in the middle.
 Not terribly useful, but mildly interesting.
 
-#### Part 3: Counter
+#### 💯 Part 3: Counter
 
 The last 3 bytes of an ObjectId are a just an incrementing **counter** to ensure uniqueness when the
 same process generates multiple ObjectIds within the same second. Again, this is simply hashed and
 modulated over the color wheel to select a color. This counter doesn't really convey any information
 so neither does the color.
 
-### Settings
+### ⚙️ Settings
 
 Click on the extension icon to adjust the settings to your liking:
 
@@ -84,7 +84,7 @@ Click on the extension icon to adjust the settings to your liking:
 - Toggle the **Enabled** checkbox to turn the colorization on/off entirely
 - Double-click on the **CandyCaneId** title to factory reset the extension
 
-## Install
+## 💾 Install
 
 1. Download repo
 2. Go to chrome://extensions/
@@ -93,7 +93,7 @@ Click on the extension icon to adjust the settings to your liking:
 5. Select src directory
 6. Pin extension
 
-## Limitations
+## ⚠️ Limitations
 
 - Colorblind Mode is experimental and has no evidence that it actually helps yet. More testing and
   research is required to implement this properly.
@@ -109,7 +109,7 @@ Click on the extension icon to adjust the settings to your liking:
 - If the extension seems to be misbehaving, try double-clicking on the "CandyCaneId" title in the
   extension dropdown to factory reset it.
 
-## FAQ
+## ❓ FAQ
 
 - Why 4 colors?
     - I originally started with 3, one per section of the ObjectId, and then threw in the age color
@@ -126,7 +126,7 @@ Click on the extension icon to adjust the settings to your liking:
       ObjectId remain intact so it can still be compared outside the browser. Otherwise this would
       only add confusion.
 
-## Inspirations
+## 💡 Inspirations
 
 - https://github.com/PeaSeaGee/roids
 - https://www.youtube.com/watch?v=NxsaHxON350&t=504s
