@@ -1,21 +1,26 @@
 async function sendMessage({saturation, lightness, enabled, hues, colorblind}) {
-  const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
+  try {
+    const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
-  function doSend(m) {
-    chrome.tabs.sendMessage(tab.id, m);
-  }
+    function doSend(m) {
+      chrome.tabs.sendMessage(tab.id, m);
+    }
 
-  if (saturation) {
-    doSend({action: `candycaneid-saturation`, value: saturation});
+    if (saturation) {
+      doSend({action: `candycaneid-saturation`, value: saturation});
+    }
+    if (lightness) {
+      doSend({action: `candycaneid-lightness`, value: lightness});
+    }
+    if (hues) {
+      doSend({action: `candycaneid-hues`, value: hues});
+    }
+    doSend({action: `candycaneid-enabled`, value: !!enabled});
+    doSend({action: `candycaneid-colorblind`, value: !!colorblind});
+  } catch (e) {
+    console.log(e);
+    // ignore
   }
-  if (lightness) {
-    doSend({action: `candycaneid-lightness`, value: lightness});
-  }
-  if (hues) {
-    doSend({action: `candycaneid-hues`, value: hues});
-  }
-  doSend({action: `candycaneid-enabled`, value: !!enabled});
-  doSend({action: `candycaneid-colorblind`, value: !!colorblind});
 }
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
