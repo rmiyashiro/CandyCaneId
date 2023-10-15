@@ -79,8 +79,8 @@ Click on the extension icon to adjust the settings to your liking:
 - Use **Hue** sliders to shift the hue spectrum for each band of color.
     - NOTE: Moving the **Age** or **Season** sliders will disrupt the documented and meticulously
       hand-crafted color mapping, but you do you.
-- Toggle the **Colorblind Mode** checkbox to use a more colorblind-friendly range of colors (
-  experimental)
+- Toggle the **Colorblind Mode** checkbox to use a more colorblind-friendly range of colors
+  (experimental)
 - Toggle the **Enabled** checkbox to turn the colorization on/off entirely
 - Double-click on the **CandyCaneId** title to factory reset the extension
 
