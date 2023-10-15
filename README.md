@@ -77,13 +77,13 @@ so neither does the color.
 
 Click on the extension icon to adjust the settings to your liking:
 
+- Toggle the **Enabled** checkbox to turn the colorization on/off
 - Use **Saturation** and **Lightness** sliders to adjust the intensity of the colors
 - Use **Hue** sliders to shift the hue spectrum for each band of color.
     - NOTE: Moving the **Age** or **Season** sliders will disrupt the documented and meticulously
       hand-crafted color mapping, but you do you.
 - _(experimental)_ Toggle the **Colorblind Mode** checkbox to slightly increase the contrast between
   colors and switch to a more limited palette of hues.
-- Toggle the **Enabled** checkbox to turn the colorization on/off entirely
 - Double-click on the **CandyCaneId** title to factory reset the extension
 
 ## 💾 Install

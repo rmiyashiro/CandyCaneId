@@ -22,7 +22,8 @@
     }
 
     h1 {
-
+      margin-bottom: 10px;
+      user-select: none;
     }
 
     h2 {
@@ -34,9 +35,6 @@
 
     .hues {
       border-top: 1px solid #DDD;
-      border-bottom: 1px solid #DDD;
-      margin-bottom: 8px;
-      padding-bottom: 5px;
     }
 
     .control-section {
@@ -64,10 +62,11 @@
       align-items: center;
       justify-content: center;
       border-radius: 10px;
+      margin-bottom: 10px;
     }
 
     .checkbox-section:hover {
-      background-color: #EEEEEE;
+      background-color: hsla(0, 0%, 50%, 0.2);
     }
 
     .checkbox-section *:hover {
@@ -77,6 +76,10 @@
 </head>
 <body id="body">
 <h1 id="title">CandyCaneId</h1>
+<div class="checkbox-section">
+  <label for="enabled">Enabled</label>
+  <input type="checkbox" id="enabled" checked/>
+</div>
 <div class="control-section">
   <div class="control-label">
     <label for="saturation">Saturation</label>
@@ -121,10 +124,6 @@
     <label for="colorblind">Colorblind Mode</label>
     <input type="checkbox" id="colorblind"/>
   </div>
-</div>
-<div class="checkbox-section">
-  <label for="enabled">Enabled</label>
-  <input type="checkbox" id="enabled" checked/>
 </div>
 </body>
 </html>
