@@ -75,8 +75,10 @@ function setHues(hues) {
 function setColorBlindEnabled(enabled) {
   if (enabled) {
     allowedHues = [[40, 60], [170, 360]];
+    contrast = 10;
   } else {
     allowedHues = [[0, 360]];
+    contrast = 5;
   }
   if (candyCaneIdEnabled) {
     regenerateCss();
