@@ -77,7 +77,7 @@ so neither does the color.
 
 Click on the extension icon to adjust the settings to your liking:
 
-- Use **Saturation** and **Luminance** sliders to adjust the intensity of the colors
+- Use **Saturation** and **Lightness** sliders to adjust the intensity of the colors
 - Use **Hue** sliders to shift the hue spectrum for each band of color.
     - NOTE: Moving the **Age** or **Season** sliders will disrupt the documented and meticulously
       hand-crafted color mapping, but you do you.

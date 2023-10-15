@@ -1,4 +1,4 @@
-async function sendMessage({saturation, luminance, enabled, hues, colorblind}) {
+async function sendMessage({saturation, lightness, enabled, hues, colorblind}) {
   const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
   function doSend(m) {
@@ -8,8 +8,8 @@ async function sendMessage({saturation, luminance, enabled, hues, colorblind}) {
   if (saturation) {
     doSend({action: `candycaneid-saturation`, value: saturation});
   }
-  if (luminance) {
-    doSend({action: `candycaneid-luminance`, value: luminance});
+  if (lightness) {
+    doSend({action: `candycaneid-lightness`, value: lightness});
   }
   if (hues) {
     doSend({action: `candycaneid-hues`, value: hues});
