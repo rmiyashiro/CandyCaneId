@@ -8,8 +8,8 @@ const CSS_TEXT = '--candycaneid-text';
 let candyCaneIdStyles;
 let candyCaneIdEnabled = false;
 
+let contrast = 5;
 let allowedHues = [[0, 360]];
-
 let hueRanges = {
   age: {start: 120, range: 240},
   season: {start: 240, range: -360},
@@ -147,6 +147,8 @@ function toAllowedHue(hue) {
   // rescale hue to fit in the allowed range
   const totalAllowed = allowedHues.map(range => range[1] - range[0]).reduce(
       (sum, r) => sum + r);
+  // apply contrast
+  hue = Math.round(hue / contrast) * contrast;
   let allowedHueIndex = hue / 360 * totalAllowed;
   for (let i = 0; i < allowedHues.length; i++) {
     const range = allowedHues[i];
@@ -206,7 +208,7 @@ function colorizeObjectIds(root) {
   }
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (request) {
   if (request.action === 'candycaneid-saturation') {
     setSaturation(request.value);
   }
@@ -229,7 +231,7 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 });
 
 // Observe changes to the DOM and apply colorization when new content is added
-const observer = new MutationObserver((mutationsList, observer) => {
+const observer = new MutationObserver((mutationsList) => {
   for (const mutation of mutationsList) {
     if (mutation.addedNodes.length > 0) {
       mutation.addedNodes.forEach((addedNode) => {
