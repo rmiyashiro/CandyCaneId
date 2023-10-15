@@ -75,12 +75,14 @@ so neither does the color.
 
 Click on the extension icon to adjust the settings to your liking:
 
-- Use Saturation and Luminance sliders to adjust the intensity of the colors
-- Use Hue sliders to shift the hue spectrum for each band of color.
+- Use **Saturation** and **Luminance** sliders to adjust the intensity of the colors
+- Use **Hue** sliders to shift the hue spectrum for each band of color.
     - NOTE: Moving the **Age** or **Season** sliders will disrupt the documented and meticulously
       hand-crafted color mapping, but you do you.
-- Toggle the Enabled checkbox to turn the colorization on/off
-- Double-click on the "CandyCaneId" title to factory reset the extension
+- Toggle the **Colorblind Mode** checkbox to use a more colorblind-friendly range of colors (
+  experimental)
+- Toggle the **Enabled** checkbox to turn the colorization on/off entirely
+- Double-click on the **CandyCaneId** title to factory reset the extension
 
 ## Install
 
