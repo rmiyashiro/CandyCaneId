@@ -123,3 +123,8 @@ Click on the extension icon to adjust the settings to your liking:
       Slack or other programs), I felt it was important that the actual hexadecimal text of the
       ObjectId remain intact so it can still be compared outside the browser. Otherwise this would
       only add confusion.
+
+## Inspirations
+
+- https://github.com/PeaSeaGee/roids
+- https://www.youtube.com/watch?v=NxsaHxON350&t=504s
