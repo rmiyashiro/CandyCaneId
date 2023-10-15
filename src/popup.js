@@ -7,7 +7,8 @@ const DEFAULT_SETTINGS = {
   },
   saturation: 60,
   luminance: 50,
-  enabled: true
+  enabled: true,
+  colorblind: false
 };
 
 function getSaturationRange() {
@@ -44,6 +45,10 @@ function getCounterHueRange() {
 
 function getEnabledCheckbox() {
   return document.getElementById('enabled');
+}
+
+function getColorblindCheckbox() {
+  return document.getElementById('colorblind');
 }
 
 function updateSettings(settings) {
@@ -99,12 +104,19 @@ function setEnabled(enabled) {
   document.getElementById('body').classList.toggle('enabled', enabled);
 }
 
+function setColorblind(colorblind) {
+  getColorblindCheckbox().checked = colorblind;
+  updateSettings({colorblind});
+  document.getElementById('body').classList.toggle('colorblind', colorblind);
+}
+
 function initialize(settings) {
-  const {saturation, luminance, enabled, hues} = settings;
+  const {saturation, luminance, enabled, colorblind, hues} = settings;
   setSaturation(saturation);
   setLuminance(luminance);
   setHues(hues);
   setEnabled(enabled);
+  setColorblind(colorblind);
 }
 
 document.addEventListener('DOMContentLoaded', async function () {
@@ -151,6 +163,10 @@ document.addEventListener('DOMContentLoaded', async function () {
   getEnabledCheckbox().addEventListener('change', function (e) {
     setEnabled(!!e.target.checked);
   });
+
+  getColorblindCheckbox().addEventListener('change', function (e) {
+    setColorblind(!!e.target.checked);
+  })
 
   document.getElementById('title').addEventListener('dblclick', function () {
     chrome.storage.local.set({candycaneidSettings: DEFAULT_SETTINGS});

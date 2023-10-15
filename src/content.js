@@ -72,6 +72,17 @@ function setHues(hues) {
   }
 }
 
+function setColorBlindEnabled(enabled) {
+  if (enabled) {
+    allowedHues = [[40, 60], [170, 360]];
+  } else {
+    allowedHues = [[0, 360]];
+  }
+  if (candyCaneIdEnabled) {
+    regenerateCss();
+  }
+}
+
 function generateObjectIdCss(objectId) {
   const timestamp = objectId.slice(0, 8); // 4 bytes
   const machine = objectId.slice(8, 18); // 5 bytes
@@ -227,6 +238,9 @@ chrome.runtime.onMessage.addListener(function (request) {
         clearCss();
       }
     }
+  }
+  if (request.action === 'candycaneid-colorblind') {
+    setColorBlindEnabled(!!request.value);
   }
 });
 

@@ -1,4 +1,4 @@
-async function sendMessage({saturation, luminance, enabled, hues}) {
+async function sendMessage({saturation, luminance, enabled, hues, colorblind}) {
   const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
   function doSend(m) {
@@ -15,6 +15,7 @@ async function sendMessage({saturation, luminance, enabled, hues}) {
     doSend({action: `candycaneid-hues`, value: hues});
   }
   doSend({action: `candycaneid-enabled`, value: !!enabled});
+  doSend({action: `candycaneid-colorblind`, value: !!colorblind});
 }
 
 chrome.storage.onChanged.addListener(function (changes, areaName) {
@@ -25,18 +26,13 @@ chrome.storage.onChanged.addListener(function (changes, areaName) {
   }
 });
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(function (message) {
   if (message.candycaneidLoaded === true) {
-    chrome.storage.local.get(
-        {
-          candycaneidSettings: {
-            saturation: 50,
-            luminance: 60,
-            enabled: true
-          }
-        }).then(
+    chrome.storage.local.get({candycaneidSettings: {}}).then(
         ({candycaneidSettings}) => {
-          sendMessage(candycaneidSettings);
+          if (Object.keys(candycaneidSettings).length !== 0) {
+            sendMessage(candycaneidSettings);
+          }
         });
   }
 });

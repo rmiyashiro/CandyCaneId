@@ -36,6 +36,7 @@
       border-top: 1px solid #DDD;
       border-bottom: 1px solid #DDD;
       margin-bottom: 8px;
+      padding-bottom: 5px;
     }
 
     .control-section {
@@ -57,7 +58,7 @@
       width: 95%;
     }
 
-    .enabled-section {
+    .checkbox-section {
       display: flex;
       font-weight: bold;
       align-items: center;
@@ -65,11 +66,11 @@
       border-radius: 10px;
     }
 
-    .enabled-section:hover {
+    .checkbox-section:hover {
       background-color: #EEEEEE;
     }
 
-    .enabled-section *:hover {
+    .checkbox-section *:hover {
       cursor: pointer;
     }
   </style>
@@ -116,8 +117,12 @@
     </div>
     <input class="slider" type="range" id="counterHue" min="0" max="360" value="0">
   </div>
+  <div class="checkbox-section">
+    <label for="colorblind">Colorblind Mode</label>
+    <input type="checkbox" id="colorblind"/>
+  </div>
 </div>
-<div class="enabled-section">
+<div class="checkbox-section">
   <label for="enabled">Enabled</label>
   <input type="checkbox" id="enabled" checked/>
 </div>
