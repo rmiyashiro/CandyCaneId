@@ -28,6 +28,8 @@ more memorable.
 With this extension installed, you can hover over any ObjectId to see when it was originally
 created (in your browser's timezone).
 
+![hover](assets/hover.png)
+
 ### 📊 Colorization as Data Visualization
 
 In addition to being more recognizable, the colors themselves also convey a small amount of
