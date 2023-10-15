@@ -6,7 +6,7 @@ const DEFAULT_SETTINGS = {
     counter: {start: 0, range: 360}
   },
   saturation: 60,
-  lightness: 50,
+  luminance: 50,
   enabled: true
 };
 
@@ -14,16 +14,16 @@ function getSaturationRange() {
   return document.getElementById('saturation');
 }
 
-function getLightnessRange() {
-  return document.getElementById('lightness');
+function getLuminanceRange() {
+  return document.getElementById('luminance');
 }
 
 function getSaturationNum() {
   return document.getElementById('saturationNum');
 }
 
-function getLightnessNum() {
-  return document.getElementById('lightnessNum');
+function getLuminanceNum() {
+  return document.getElementById('luminanceNum');
 }
 
 function getAgeHueRange() {
@@ -70,10 +70,10 @@ function setSaturation(saturation) {
   updateSettings({saturation});
 }
 
-function setLightness(lightness) {
-  getLightnessNum().value = lightness;
-  getLightnessRange().value = lightness;
-  updateSettings({lightness});
+function setLuminance(luminance) {
+  getLuminanceNum().value = luminance;
+  getLuminanceRange().value = luminance;
+  updateSettings({luminance});
 }
 
 function setHues(hues) {
@@ -100,9 +100,9 @@ function setEnabled(enabled) {
 }
 
 function initialize(settings) {
-  const {saturation, lightness, enabled, hues} = settings;
+  const {saturation, luminance, enabled, hues} = settings;
   setSaturation(saturation);
-  setLightness(lightness);
+  setLuminance(luminance);
   setHues(hues);
   setEnabled(enabled);
 }
@@ -120,16 +120,16 @@ document.addEventListener('DOMContentLoaded', async function () {
     setSaturation(Number(e.target.value));
   });
 
-  getLightnessRange().addEventListener('change', function (e) {
-    setLightness(Number(e.target.value));
+  getLuminanceRange().addEventListener('change', function (e) {
+    setLuminance(Number(e.target.value));
   });
 
   getSaturationNum().addEventListener('change', function (e) {
     setSaturation(Number(e.target.value));
   });
 
-  getLightnessNum().addEventListener('change', function (e) {
-    setLightness(Number(e.target.value));
+  getLuminanceNum().addEventListener('change', function (e) {
+    setLuminance(Number(e.target.value));
   });
 
   getAgeHueRange().addEventListener('change', function (e) {

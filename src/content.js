@@ -2,11 +2,13 @@ const OBJECT_ID_REGEX = /\b[0-9a-fA-F]{24}\b/g;
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const FIVE_YEARS = ONE_DAY * 365 * 5;
 const CSS_SATURATION = '--candycaneid-sat';
-const CSS_LIGHTNESS = '--candycaneid-lit';
+const CSS_LUMINANCE = '--candycaneid-lum';
 const CSS_TEXT = '--candycaneid-text';
 
 let candyCaneIdStyles;
 let candyCaneIdEnabled = false;
+
+let allowedHues = [[0, 360]];
 
 let hueRanges = {
   age: {start: 120, range: 240},
@@ -19,7 +21,7 @@ function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
     if (!candyCaneIdStyles) {
       candyCaneIdStyles = document.createElement('style');
-      candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_TEXT}: white;}\n`
+      candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LUMINANCE}: 50%; ${CSS_TEXT}: white;}\n`
           +
           `.candycaneid-timestamp {color: var(${CSS_TEXT});}\n` +
           `.candycaneid-machine {color: var(${CSS_TEXT});}\n` +
@@ -56,11 +58,11 @@ function setSaturation(saturation) {
   r.style.setProperty(CSS_SATURATION, `${saturation}%`);
 }
 
-function setLightness(lightness) {
+function setLuminance(luminance) {
   const r = document.querySelector(':root');
-  r.style.setProperty(CSS_LIGHTNESS, `${lightness}%`);
+  r.style.setProperty(CSS_LUMINANCE, `${luminance}%`);
   r.style.setProperty(CSS_TEXT,
-      lightness > 60 ? 'black' : 'white');
+      luminance > 60 ? 'black' : 'white');
 }
 
 function setHues(hues) {
@@ -132,11 +134,36 @@ function counterToColor(counter) {
 }
 
 function hueFractionToColor(fraction, {start, range}) {
-  return hueToColor((((start + fraction * range) % 360) + 360) % 360);
+  const normalizedHue = (((start + fraction * range) % 360) + 360) % 360;
+  const allowedHue = toAllowedHue(normalizedHue);
+  return hueToColor(allowedHue);
 }
 
 function hueToColor(hue) {
-  return `hsl(${hue}, var(${CSS_SATURATION}), var(${CSS_LIGHTNESS}))`;
+  return `hsl(${hue}, var(${CSS_SATURATION}), var(${CSS_LUMINANCE}))`;
+}
+
+function toAllowedHue(hue) {
+  // rescale hue to fit in the allowed range
+  const totalAllowed = allowedHues.map(range => range[1] - range[0]).reduce(
+      (sum, r) => sum + r);
+  let allowedHueIndex = hue / 360 * totalAllowed;
+  for (let i = 0; i < allowedHues.length; i++) {
+    const range = allowedHues[i];
+    const rangeSize = range[1] - range[0];
+    // if the index is in this range
+    if (allowedHueIndex <= 0) {
+      return range[0];
+    } else if (allowedHueIndex < rangeSize) {
+      // return the hue at the index in the range
+      return range[0] + allowedHueIndex;
+    } else {
+      // index into next range
+      allowedHueIndex -= rangeSize;
+    }
+  }
+  // return last allowed hue
+  return allowedHues[allowedHues.length - 1][1];
 }
 
 function collectObjectIds(root) {
@@ -183,8 +210,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
   if (request.action === 'candycaneid-saturation') {
     setSaturation(request.value);
   }
-  if (request.action === 'candycaneid-lightness') {
-    setLightness(request.value);
+  if (request.action === 'candycaneid-luminance') {
+    setLuminance(request.value);
   }
   if (request.action === 'candycaneid-hues') {
     setHues(request.value);
