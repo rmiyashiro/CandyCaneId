@@ -4,12 +4,14 @@ const FIVE_YEARS = ONE_DAY * 365 * 5;
 const CSS_SATURATION = '--candycaneid-sat';
 const CSS_LIGHTNESS = '--candycaneid-lit';
 const CSS_TEXT = '--candycaneid-text';
+const HUES_FULL = [[0, 360]];
+const HUES_COLORBLIND = [[40, 60], [170, 360]];
 
 let candyCaneIdStyles;
 let candyCaneIdEnabled = false;
 
 let contrast = 5;
-let allowedHues = [[0, 360]];
+let allowedHues = HUES_FULL;
 let hueRanges = {
   age: {start: 120, range: 240},
   season: {start: 240, range: -360},
@@ -74,10 +76,10 @@ function setHues(hues) {
 
 function setColorBlindEnabled(enabled) {
   if (enabled) {
-    allowedHues = [[40, 60], [170, 360]];
+    allowedHues = HUES_COLORBLIND;
     contrast = 10;
   } else {
-    allowedHues = [[0, 360]];
+    allowedHues = HUES_FULL;
     contrast = 5;
   }
   if (candyCaneIdEnabled) {

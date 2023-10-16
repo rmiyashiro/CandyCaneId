@@ -4,6 +4,12 @@
   <title>CandyCaneId</title>
   <script src="popup.js"></script>
   <style>
+    :root {
+      --hue: 0;
+      --sat: 60%;
+      --lit: 50%;
+    }
+
     body {
       background-image: url('images/popup_bg.png');
       background-repeat: no-repeat;
@@ -11,14 +17,28 @@
       font-family: "Courier New", monospace;
       color: black;
       text-shadow: -1px 1px 0 white, 1px 1px 0 white, 1px -1px 0 white, -1px -1px 0 white;
-      background-color: #FFF;
+      background-color: transparent;
       background-blend-mode: luminosity, normal;
       transition: background-color 0.6s;
     }
 
-    body.enabled {
-      background-color: transparent;
-      transition: background-color 0.6s;
+    body.disabled {
+      background-color: #FFF;
+      transition: background-color 0s;
+    }
+
+    body.disabled .slider {
+      background-color: #FFF !important;
+      transition: background-color 0s;
+    }
+
+    body.disabled input[id="colorblind"] {
+      accent-color: #DDD;
+      transition: accent-color 0s;
+    }
+
+    input[type=checkbox] {
+      transition: accent-color 0.6s;
     }
 
     h1 {
@@ -48,12 +68,94 @@
       justify-content: space-between;
     }
 
+    input[type=number] {
+      border: none;
+      text-align: right;
+      margin-right: 5px;
+    }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+      appearance: none;
+    }
+
     .control-label label {
       margin-right: 1em;
     }
 
     .slider {
       width: 95%;
+      appearance: none;
+      outline: none;
+      height: 8px;
+      border-radius: 4px;
+      transition: background-color 0.6s;
+      background-color: transparent;
+      background-blend-mode: luminosity, normal;
+    }
+
+    .slider::-webkit-slider-thumb {
+      appearance: none;
+      width: 16px;
+      height: 16px;
+      background: white;
+      border-radius: 8px;
+      border: 2px solid black;
+      cursor: grab;
+    }
+
+    .slider::-webkit-slider-thumb:active {
+      cursor: grabbing;
+    }
+
+    .slider.saturation {
+      background: linear-gradient(to right, hsl(var(--hue), 20%, var(--lit)), hsl(var(--hue), 100%, var(--lit)));
+    }
+
+    .slider.lightness {
+      background: linear-gradient(to right, hsl(var(--hue), var(--sat), 30%), hsl(var(--hue), var(--sat), 95%));
+    }
+
+    .slider.hue {
+      background: linear-gradient(to right,
+      hsl(0, var(--sat), var(--lit)),
+      hsl(36, var(--sat), var(--lit)) 10%,
+      hsl(72, var(--sat), var(--lit)) 20%,
+      hsl(108, var(--sat), var(--lit)) 30%,
+      hsl(144, var(--sat), var(--lit)) 40%,
+      hsl(180, var(--sat), var(--lit)) 50%,
+      hsl(216, var(--sat), var(--lit)) 60%,
+      hsl(252, var(--sat), var(--lit)) 70%,
+      hsl(288, var(--sat), var(--lit)) 80%,
+      hsl(324, var(--sat), var(--lit)) 90%,
+      hsl(360, var(--sat), var(--lit)) 100%);
+    }
+
+    body.colorblind .slider.hue {
+      background: linear-gradient(to right,
+      hsl(40, var(--sat), var(--lit)) 0%,
+      hsl(50, var(--sat), var(--lit)) 4.8%,
+      hsl(60, var(--sat), var(--lit)) 9.5%,
+      hsl(170, var(--sat), var(--lit)) 9.5%,
+      hsl(180, var(--sat), var(--lit)) 14.3%,
+      hsl(190, var(--sat), var(--lit)) 19%,
+      hsl(200, var(--sat), var(--lit)) 23.8%,
+      hsl(210, var(--sat), var(--lit)) 28.6%,
+      hsl(220, var(--sat), var(--lit)) 33.3%,
+      hsl(230, var(--sat), var(--lit)) 38.1%,
+      hsl(240, var(--sat), var(--lit)) 42.9%,
+      hsl(250, var(--sat), var(--lit)) 47.6%,
+      hsl(260, var(--sat), var(--lit)) 52.4%,
+      hsl(270, var(--sat), var(--lit)) 57.1%,
+      hsl(280, var(--sat), var(--lit)) 61.9%,
+      hsl(290, var(--sat), var(--lit)) 66.7%,
+      hsl(300, var(--sat), var(--lit)) 71.4%,
+      hsl(310, var(--sat), var(--lit)) 76.2%,
+      hsl(320, var(--sat), var(--lit)) 81%,
+      hsl(330, var(--sat), var(--lit)) 85.7%,
+      hsl(340, var(--sat), var(--lit)) 90.5%,
+      hsl(350, var(--sat), var(--lit)) 95.2%,
+      hsl(360, var(--sat), var(--lit)) 100%);
     }
 
     .checkbox-section {
@@ -65,12 +167,13 @@
       margin-bottom: 10px;
     }
 
-    .checkbox-section:hover {
-      background-color: hsla(0, 0%, 50%, 0.2);
-    }
-
     .checkbox-section *:hover {
       cursor: pointer;
+    }
+
+    .checkbox-section label {
+      margin-right: -4px;
+      padding-right: 4px;
     }
   </style>
 </head>
@@ -85,40 +188,40 @@
     <label for="saturation">Saturation</label>
     <input type="number" id="saturationNum" min="20" max="100"/>
   </div>
-  <input class="slider" type="range" id="saturation" min="20" max="100" value="60">
+  <input class="saturation slider" type="range" id="saturation" min="20" max="100" value="60">
 </div>
 <div class="control-section">
   <div class="control-label">
     <label for="lightness">Lightness</label>
     <input type="number" id="lightnessNum" min="30" max="95"/>
   </div>
-  <input class="slider" type="range" id="lightness" min="30" max="95" value="50">
+  <input class="lightness slider" type="range" id="lightness" min="30" max="95" value="50">
 </div>
 <div class="hues">
-  <h2>Hues</h2>
+  <h2>Hue Offset</h2>
   <div class="control-section">
     <div class="control-label">
       <label for="machineHue">Age</label>
     </div>
-    <input class="slider" type="range" id="ageHue" min="0" max="360" value="120">
+    <input class="hue slider" type="range" id="ageHue" min="0" max="360" value="120">
   </div>
   <div class="control-section">
     <div class="control-label">
       <label for="seasonHue">Season</label>
     </div>
-    <input class="slider" type="range" id="seasonHue" min="0" max="360" value="240">
+    <input class="hue slider" type="range" id="seasonHue" min="0" max="360" value="240">
   </div>
   <div class="control-section">
     <div class="control-label">
       <label for="machineHue">Machine</label>
     </div>
-    <input class="slider" type="range" id="machineHue" min="0" max="360" value="0">
+    <input class="hue slider" type="range" id="machineHue" min="0" max="360" value="0">
   </div>
   <div class="control-section">
     <div class="control-label">
       <label for="counterHue">Counter</label>
     </div>
-    <input class="slider" type="range" id="counterHue" min="0" max="360" value="0">
+    <input class="hue slider" type="range" id="counterHue" min="0" max="360" value="0">
   </div>
   <div class="checkbox-section">
     <label for="colorblind">Colorblind Mode</label>

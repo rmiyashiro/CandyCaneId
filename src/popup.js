@@ -70,12 +70,14 @@ function updateSettings(settings) {
 }
 
 function setSaturation(saturation) {
+  document.querySelector(':root').style.setProperty("--sat", `${saturation}%`);
   getSaturationNum().value = saturation;
   getSaturationRange().value = saturation;
   updateSettings({saturation});
 }
 
 function setLightness(lightness) {
+  document.querySelector(':root').style.setProperty("--lit", `${lightness}%`);
   getLightnessNum().value = lightness;
   getLightnessRange().value = lightness;
   updateSettings({lightness});
@@ -101,7 +103,7 @@ function setHues(hues) {
 function setEnabled(enabled) {
   getEnabledCheckbox().checked = enabled;
   updateSettings({enabled});
-  document.getElementById('body').classList.toggle('enabled', enabled);
+  document.getElementById('body').classList.toggle('disabled', !enabled);
 }
 
 function setColorblind(colorblind) {
