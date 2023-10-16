@@ -132,8 +132,8 @@ Click on the extension icon to adjust the settings to your liking:
 - What's the point of the Hue Offset settings?
     - I don't know, I just threw them in there because they look fun. I suppose if there was one
       ObjectId in particular that was your favorite, you could shift the sliders so that that
-      specific ObjectId has the colorization you want (e.g. all red). But you could you could only
-      do that with that one ObjectId.
+      specific ObjectId has the colorization you want (e.g. all red). But you could only do that
+      for that one ObjectId.
 
 ## 💡 Inspirations
 
