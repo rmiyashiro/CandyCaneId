@@ -86,6 +86,8 @@ Click on the extension icon to adjust the settings to your liking:
   colors and switch to a more limited palette of hues.
 - Double-click on the **CandyCaneId** title to factory reset the extension
 
+![popup](assets/popup.png)
+
 ## 💾 Install
 
 1. Download repo
