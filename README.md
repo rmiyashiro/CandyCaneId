@@ -54,8 +54,8 @@ ObjectId is 5 years old or more.
 
 The second band of color represents the time of year or **season** when the ObjectId was created.
 This is done by taking the time within the given year of creation and modulating it over the color
-wheel. By default, the colors are mapped such that winter looks blue, spring looks green, summer
-looks yellow/orange, and fall looks red/purple.
+wheel. By default, the colors are mapped such that winter looks purple/blue, spring looks green, summer
+looks yellow/orange, and fall looks red/magenta.
 
 ![season](assets/season.png)
 
