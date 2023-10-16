@@ -129,6 +129,11 @@ Click on the extension icon to adjust the settings to your liking:
       Slack or other programs), I felt it was important that the actual hexadecimal text of the
       ObjectId remain intact so it can still be compared outside the browser. Otherwise this would
       only add confusion.
+- What's the point of the Hue Offset settings?
+    - I don't know, I just threw them in there because they look fun. I suppose if there was one
+      ObjectId in particular that was your favorite, you could shift the sliders so that that
+      specific ObjectId has the colorization you want (e.g. all red). But you could you could only
+      do that with that one ObjectId.
 
 ## 💡 Inspirations
 
