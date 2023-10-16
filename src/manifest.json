@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "CandyCaneId",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Colorize ObjectIds to make them more distinctive and informative",
   "action": {
     "default_popup": "popup.html"
