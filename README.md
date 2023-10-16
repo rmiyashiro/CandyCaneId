@@ -54,8 +54,8 @@ ObjectId is 5 years old or more.
 
 The second band of color represents the time of year or **season** when the ObjectId was created.
 This is done by taking the time within the given year of creation and modulating it over the color
-wheel. By default, the colors are mapped such that winter looks blue, spring looks green, summer
-looks yellow/orange, and fall looks red/purple.
+wheel. By default, the colors are mapped such that winter looks purple/blue, spring looks green, summer
+looks yellow/orange, and fall looks red/magenta.
 
 ![season](assets/season.png)
 
@@ -129,6 +129,11 @@ Click on the extension icon to adjust the settings to your liking:
       Slack or other programs), I felt it was important that the actual hexadecimal text of the
       ObjectId remain intact so it can still be compared outside the browser. Otherwise this would
       only add confusion.
+- What's the point of the Hue Offset settings?
+    - I don't know, I just threw them in there because they look fun. I suppose if there was one
+      ObjectId in particular that was your favorite, you could shift the sliders so that that
+      specific ObjectId has the colorization you want (e.g. all red). But you could only do that
+      for that one ObjectId.
 
 ## 💡 Inspirations
 
