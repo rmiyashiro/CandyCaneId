@@ -2,6 +2,8 @@
 
 Chrome extension for making ObjectIds more identifiable.
 
+[Chrome Web Store](https://chrome.google.com/webstore/detail/candycaneid/lnfhmkedfilblpkjlaophjdpkldnfjap)
+
 ## 🍬 How It Works
 
 This extension searches the page for
@@ -89,6 +91,10 @@ Click on the extension icon to adjust the settings to your liking:
 ![popup](assets/popup.png)
 
 ## 💾 Install
+
+[Chrome Web Store](https://chrome.google.com/webstore/detail/candycaneid/lnfhmkedfilblpkjlaophjdpkldnfjap)
+
+### Manual
 
 1. Download repo
 2. Go to chrome://extensions/
