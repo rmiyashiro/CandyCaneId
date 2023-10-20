@@ -1,4 +1,12 @@
-async function sendMessage({saturation, lightness, enabled, hues, colorblind}) {
+async function sendMessage({
+  enabled,
+  saturation,
+  lightness,
+  blur,
+  angle,
+  hues,
+  colorblind
+}) {
   try {
     const [tab] = await chrome.tabs.query({active: true, currentWindow: true});
 
@@ -14,6 +22,12 @@ async function sendMessage({saturation, lightness, enabled, hues, colorblind}) {
     }
     if (hues) {
       doSend({action: `candycaneid-hues`, value: hues});
+    }
+    if (blur >= 0) {
+      doSend({action: `candycaneid-blur`, value: blur});
+    }
+    if (angle >= 0) {
+      doSend({action: `candycaneid-angle`, value: angle});
     }
     doSend({action: `candycaneid-enabled`, value: !!enabled});
     doSend({action: `candycaneid-colorblind`, value: !!colorblind});

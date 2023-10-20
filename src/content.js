@@ -4,6 +4,8 @@ const FIVE_YEARS = ONE_DAY * 365 * 5;
 const CSS_SATURATION = '--candycaneid-sat';
 const CSS_LIGHTNESS = '--candycaneid-lit';
 const CSS_TEXT = '--candycaneid-text';
+const CSS_ANGLE = '--candycaneid-angle';
+const CSS_BLUR = '--candycaneid-blur';
 const HUES_FULL = [[0, 360]];
 const HUES_COLORBLIND = [[40, 60], [170, 360]];
 
@@ -23,7 +25,7 @@ function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
     if (!candyCaneIdStyles) {
       candyCaneIdStyles = document.createElement('style');
-      candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_TEXT}: white;}\n`
+      candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_ANGLE}: 110deg; ${CSS_BLUR}: 3%; ${CSS_TEXT}: white;}\n`
           +
           `.candycaneid { color: var(${CSS_TEXT}) !important; border-radius: 2px; }\n`;
       document.head.appendChild(candyCaneIdStyles);
@@ -53,16 +55,27 @@ function regenerateCss() {
   generateCss([...objectids]);
 }
 
+function getRootCss() {
+  return document.querySelector(':root');
+}
+
 function setSaturation(saturation) {
-  const r = document.querySelector(':root');
-  r.style.setProperty(CSS_SATURATION, `${saturation}%`);
+  getRootCss().style.setProperty(CSS_SATURATION, `${saturation}%`);
 }
 
 function setLightness(lightness) {
-  const r = document.querySelector(':root');
+  const r = getRootCss();
   r.style.setProperty(CSS_LIGHTNESS, `${lightness}%`);
   r.style.setProperty(CSS_TEXT,
       lightness > 60 ? 'black' : 'white');
+}
+
+function setAngle(angle) {
+  getRootCss().style.setProperty(CSS_ANGLE, `${angle}deg`)
+}
+
+function setBlur(blur) {
+  getRootCss().style.setProperty(CSS_BLUR, `${blur}%`)
 }
 
 function setHues(hues) {
@@ -73,15 +86,13 @@ function setHues(hues) {
 }
 
 function setColorBlindEnabled(enabled) {
-  if (enabled) {
-    allowedHues = HUES_COLORBLIND;
-    contrast = 10;
-  } else {
-    allowedHues = HUES_FULL;
-    contrast = 5;
-  }
-  if (candyCaneIdEnabled) {
-    regenerateCss();
+  const newContrast = enabled ? 10 : 5;
+  if (newContrast !== contrast) {
+    contrast = newContrast;
+    allowedHues = enabled ? HUES_COLORBLIND : HUES_FULL;
+    if (candyCaneIdEnabled) {
+      regenerateCss();
+    }
   }
 }
 
@@ -97,8 +108,16 @@ function generateObjectIdCss(objectId) {
   const dayBg = dayToColor(date);
   const machineBg = machineToColor(machine);
   const counterBg = counterToColor(counter);
+  const gradient = generateGradient([ageBg, dayBg, machineBg, counterBg],
+      [13, 33, 75])
 
-  return `.candycaneid-${objectId} { background-image: linear-gradient( 110deg, ${ageBg} 10%, 13%, ${dayBg} 16%, ${dayBg} 19%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
+  return `.candycaneid-${objectId} { background-image: linear-gradient( var(${CSS_ANGLE}), ${gradient} ); }`;
+}
+
+function generateGradient(colors, borderPcts) {
+  return borderPcts.map(
+      (b, i) => `${colors[i]} calc(${b}% - var(${CSS_BLUR})), ${b}%, ${colors[i
+      + 1]} calc(${b}% + var(${CSS_BLUR}))`).join(", ");
 }
 
 function hashCode(inputString) {
@@ -221,27 +240,37 @@ function colorizeObjectIds(root) {
 }
 
 chrome.runtime.onMessage.addListener(function (request) {
-  if (request.action === 'candycaneid-saturation') {
-    setSaturation(request.value);
-  }
-  if (request.action === 'candycaneid-lightness') {
-    setLightness(request.value);
-  }
-  if (request.action === 'candycaneid-hues') {
-    setHues(request.value);
-  }
-  if (request.action === 'candycaneid-enabled') {
-    if (candyCaneIdEnabled !== request.value) {
-      candyCaneIdEnabled = request.value;
-      if (candyCaneIdEnabled) {
-        regenerateCss();
-      } else {
-        clearCss();
+  switch (request.action) {
+    case 'candycaneid-saturation':
+      setSaturation(request.value);
+      break;
+    case 'candycaneid-lightness':
+      setLightness(request.value);
+      break;
+    case 'candycaneid-angle':
+      setAngle(request.value);
+      break;
+    case 'candycaneid-blur':
+      setBlur(request.value);
+      break;
+    case 'candycaneid-hues':
+      setHues(request.value);
+      break;
+    case 'candycaneid-colorblind':
+      setColorBlindEnabled(!!request.value);
+      break;
+    case 'candycaneid-enabled':
+      if (candyCaneIdEnabled !== request.value) {
+        candyCaneIdEnabled = request.value;
+        if (candyCaneIdEnabled) {
+          regenerateCss();
+        } else {
+          clearCss();
+        }
       }
-    }
-  }
-  if (request.action === 'candycaneid-colorblind') {
-    setColorBlindEnabled(!!request.value);
+      break;
+    default:
+      //ignore
   }
 });
 

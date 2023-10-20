@@ -7,6 +7,8 @@ const DEFAULT_SETTINGS = {
   },
   saturation: 60,
   lightness: 50,
+  angle: 110,
+  blur: 3,
   enabled: true,
   colorblind: false
 };
@@ -25,6 +27,18 @@ function getSaturationNum() {
 
 function getLightnessNum() {
   return document.getElementById('lightnessNum');
+}
+
+function getBlurCheckbox() {
+  return document.getElementById('blur');
+}
+
+function getAngleRange() {
+  return document.getElementById('angle');
+}
+
+function getAngleNum() {
+  return document.getElementById('angleNum');
 }
 
 function getAgeHueRange() {
@@ -83,6 +97,18 @@ function setLightness(lightness) {
   updateSettings({lightness});
 }
 
+function setBlur(blur) {
+  getBlurCheckbox().checked = blur > 0;
+  updateSettings({blur});
+}
+
+function setAngle(angle) {
+  document.querySelector(':root').style.setProperty("--angle", `${angle}deg`);
+  getAngleRange().value = angle;
+  getAngleNum().value = angle;
+  updateSettings({angle});
+}
+
 function setHues(hues) {
   const {age, season, machine, counter} = hues;
   if (age) {
@@ -113,9 +139,19 @@ function setColorblind(colorblind) {
 }
 
 function initialize(settings) {
-  const {saturation, lightness, enabled, colorblind, hues} = settings;
+  const {
+    enabled,
+    saturation,
+    lightness,
+    blur,
+    angle,
+    colorblind,
+    hues
+  } = settings;
   setSaturation(saturation);
   setLightness(lightness);
+  setBlur(blur);
+  setAngle(angle);
   setHues(hues);
   setEnabled(enabled);
   setColorblind(colorblind);
@@ -144,6 +180,18 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   getLightnessNum().addEventListener('change', function (e) {
     setLightness(Number(e.target.value));
+  });
+
+  getBlurCheckbox().addEventListener('change', function (e) {
+    setBlur(!!e.target.checked ? 3 : 0);
+  });
+
+  getAngleRange().addEventListener('change', function (e) {
+    setAngle(Number(e.target.value));
+  });
+
+  getAngleNum().addEventListener('change', function (e) {
+    setAngle(Number(e.target.value));
   });
 
   getAgeHueRange().addEventListener('change', function (e) {
