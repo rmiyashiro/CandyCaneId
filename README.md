@@ -56,8 +56,8 @@ ObjectId is 5 years old or more.
 
 The second band of color represents the time of year or **season** when the ObjectId was created.
 This is done by taking the time within the given year of creation and modulating it over the color
-wheel. By default, the colors are mapped such that winter looks purple/blue, spring looks green, summer
-looks yellow/orange, and fall looks red/magenta.
+wheel. By default, the colors are mapped such that winter looks purple/blue, spring looks green,
+summer looks yellow/orange, and fall looks red/magenta.
 
 ![season](assets/season.png)
 
@@ -81,6 +81,8 @@ Click on the extension icon to adjust the settings to your liking:
 
 - Toggle the **Enabled** checkbox to turn the colorization on/off
 - Use **Saturation** and **Lightness** sliders to adjust the intensity of the colors
+- Use the **Angle** slider to change the angle of the transition between colors
+- Use the **Blur** toggle to turn on/off the blur transition between colors
 - Use **Hue Offset** sliders to shift the hue spectrum for each band of color.
     - NOTE: Moving the **Age** or **Season** sliders will disrupt the documented and meticulously
       hand-crafted color mapping, but you do you.
@@ -138,8 +140,8 @@ Click on the extension icon to adjust the settings to your liking:
 - What's the point of the Hue Offset settings?
     - I don't know, I just threw them in there because they look fun. I suppose if there was one
       ObjectId in particular that was your favorite, you could shift the sliders so that that
-      specific ObjectId has the colorization you want (e.g. all red). But you could only do that
-      for that one ObjectId.
+      specific ObjectId has the colorization you want (e.g. all red). But you could only do that for
+      that one ObjectId.
 
 ## 💡 Inspirations
 
