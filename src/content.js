@@ -19,18 +19,13 @@ let hueRanges = {
   counter: {start: 0, range: 360}
 }
 
-function generateObjectIdSegmentCss(segment) {
-  return `span.candycaneid span.candycaneid-${segment} {color: var(${CSS_TEXT}) !important;}\n`;
-}
-
 function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
     if (!candyCaneIdStyles) {
       candyCaneIdStyles = document.createElement('style');
       candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_TEXT}: white;}\n`
-          + generateObjectIdSegmentCss('timestamp')
-          + generateObjectIdSegmentCss('machine')
-          + generateObjectIdSegmentCss('counter');
+          +
+          `.candycaneid { color: var(${CSS_TEXT}) !important; border-radius: 2px; }\n`;
       document.head.appendChild(candyCaneIdStyles);
     }
     candyCaneIdStyles.textContent += objectIds.map(generateObjectIdCss).join(
@@ -50,7 +45,7 @@ function regenerateCss() {
   const ids = document.body.getElementsByClassName('candycaneid');
   const objectids = new Set();
   for (let i = 0; i < ids.length; i++) {
-    const oid = ids[i].getAttribute('objectid');
+    const oid = ids[i].textContent;
     if (oid) {
       objectids.add(oid);
     }
@@ -103,7 +98,7 @@ function generateObjectIdCss(objectId) {
   const machineBg = machineToColor(machine);
   const counterBg = counterToColor(counter);
 
-  return `.candycaneid-${objectId} { border-radius: 2px; background-image: linear-gradient(110deg, ${ageBg} 10%, 13%, ${dayBg} 16%, ${dayBg} 19%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
+  return `.candycaneid-${objectId} { background-image: linear-gradient( 110deg, ${ageBg} 10%, 13%, ${dayBg} 16%, ${dayBg} 19%, 33%, ${machineBg} 36%, ${machineBg} 72%, 75%, ${counterBg} 78%); }`;
 }
 
 function hashCode(inputString) {
@@ -193,9 +188,11 @@ function collectObjectIds(root) {
 
   let textNode;
   while ((textNode = walker.nextNode())) {
-    const textContent = textNode.nodeValue;
-    if (OBJECT_ID_REGEX.test(textContent)) {
-      objectIds.push({textNode, textContent});
+    if (!textNode.parentNode.classList.contains('candycaneid')) {
+      const textContent = textNode.nodeValue;
+      if (OBJECT_ID_REGEX.test(textContent)) {
+        objectIds.push({textNode, textContent});
+      }
     }
   }
 
@@ -209,11 +206,8 @@ function colorizeObjectIds(root) {
     const coloredText = textContent.replace(OBJECT_ID_REGEX, (match) => {
       uniqueIds.add(match);
       const timestamp = match.slice(0, 8); // 4 bytes
-      const machine = match.slice(8, 18); // 5 bytes
-      const counter = match.slice(18, 24); // 3 bytes
       const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
-
-      return `<span title="${date}" class="candycaneid candycaneid-${match}" objectid="${match}"><span class="candycaneid-timestamp">${timestamp}</span><span class="candycaneid-machine">${machine}</span><span class="candycaneid-counter">${counter}</span></span>`;
+      return `<span title="${date}" class="candycaneid candycaneid-${match}">${match}</span>`;
     });
 
     const newNode = document.createElement("span");
