@@ -19,15 +19,18 @@ let hueRanges = {
   counter: {start: 0, range: 360}
 }
 
+function generateObjectIdSegmentCss(segment) {
+  return `span.candycaneid span.candycaneid-${segment} {color: var(${CSS_TEXT}) !important;}\n`;
+}
+
 function generateCss(objectIds) {
   if (objectIds && objectIds.length) {
     if (!candyCaneIdStyles) {
       candyCaneIdStyles = document.createElement('style');
       candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_TEXT}: white;}\n`
-          +
-          `.candycaneid-timestamp {color: var(${CSS_TEXT});}\n` +
-          `.candycaneid-machine {color: var(${CSS_TEXT});}\n` +
-          `.candycaneid-counter {color: var(${CSS_TEXT});}\n`;
+          + generateObjectIdSegmentCss('timestamp')
+          + generateObjectIdSegmentCss('machine')
+          + generateObjectIdSegmentCss('counter');
       document.head.appendChild(candyCaneIdStyles);
     }
     candyCaneIdStyles.textContent += objectIds.map(generateObjectIdCss).join(
