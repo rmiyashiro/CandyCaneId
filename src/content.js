@@ -200,6 +200,22 @@ function toAllowedHue(hue) {
   return allowedHues[allowedHues.length - 1][1];
 }
 
+function needsColorizing(node) {
+  // skip elements inside textarea
+  let p = node.parentNode;
+  while (p) {
+    if (p.tagName === 'TEXTAREA') {
+      return false;
+    }
+    p = p.parentNode;
+  }
+  // already processed
+  if (node.parentNode.classList.contains('candycaneid')) {
+    return false;
+  }
+  return OBJECT_ID_REGEX.test(node.nodeValue);
+}
+
 function collectObjectIds(root) {
   const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null,
       false);
@@ -207,11 +223,9 @@ function collectObjectIds(root) {
 
   let textNode;
   while ((textNode = walker.nextNode())) {
-    if (!textNode.parentNode.classList.contains('candycaneid')) {
+    if (needsColorizing(textNode)) {
       const textContent = textNode.nodeValue;
-      if (OBJECT_ID_REGEX.test(textContent)) {
-        objectIds.push({textNode, textContent});
-      }
+      objectIds.push({textNode, textContent});
     }
   }
 
