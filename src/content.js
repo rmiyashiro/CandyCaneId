@@ -12,6 +12,7 @@ const HUES_COLORBLIND = [[40, 60], [170, 360]];
 
 let candyCaneIdStyles;
 let candyCaneIdEnabled = false;
+let lastDomUpdate;
 
 let contrast = 5;
 let allowedHues = HUES_FULL;
@@ -304,6 +305,7 @@ chrome.runtime.onMessage.addListener(function (request) {
 
 // Observe changes to the DOM and apply colorization when new content is added
 const observer = new MutationObserver((mutationsList) => {
+  lastDomUpdate = new Date();
   for (const mutation of mutationsList) {
     if (mutation.addedNodes.length > 0) {
       mutation.addedNodes.forEach((addedNode) => {
@@ -315,9 +317,22 @@ const observer = new MutationObserver((mutationsList) => {
   }
 });
 
+function debouncedInit() {
+  setTimeout(() => {
+    if (new Date() - lastDomUpdate > 500) {
+      colorizeObjectIds(document.body);
+    } else {
+      debouncedInit();
+    }
+  }, 100);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
-  colorizeObjectIds(document.body);
-  observer.observe(document.body, {childList: true, subtree: true});
+  lastDomUpdate = new Date();
   chrome.runtime.sendMessage({candycaneidLoaded: true});
+  observer.observe(document.body, {childList: true, subtree: true});
+  debouncedInit();
 });
+
+
 
