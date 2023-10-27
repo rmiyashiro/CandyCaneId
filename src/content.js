@@ -1,4 +1,5 @@
-const OBJECT_ID_REGEX = /\b[0-9a-fA-F]{24}\b/g;
+const IS_OBJECT_ID = /^[0-9a-fA-F]{24}$/;
+const CONTAINS_OBJECT_ID = /\b[0-9a-fA-F]{24}\b/g;
 const ONE_DAY = 1000 * 60 * 60 * 24;
 const FIVE_YEARS = ONE_DAY * 365 * 5;
 const CSS_SATURATION = '--candycaneid-sat';
@@ -201,6 +202,13 @@ function toAllowedHue(hue) {
 }
 
 function needsColorizing(node) {
+  // already processed
+  if (node.parentNode.classList.contains('candycaneid')) {
+    return false;
+  }
+  if (!CONTAINS_OBJECT_ID.test(node.nodeValue)) {
+    return false;
+  }
   // skip elements inside textarea
   let p = node.parentNode;
   while (p) {
@@ -209,11 +217,7 @@ function needsColorizing(node) {
     }
     p = p.parentNode;
   }
-  // already processed
-  if (node.parentNode.classList.contains('candycaneid')) {
-    return false;
-  }
-  return OBJECT_ID_REGEX.test(node.nodeValue);
+  return true;
 }
 
 function collectObjectIds(root) {
@@ -236,17 +240,27 @@ function colorizeObjectIds(root) {
   const uniqueIds = new Set();
   const objectIds = collectObjectIds(root);
   objectIds.forEach(({textNode, textContent}) => {
-    const coloredText = textContent.replace(OBJECT_ID_REGEX, (match) => {
-      uniqueIds.add(match);
-      const timestamp = match.slice(0, 8); // 4 bytes
-      const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
-      return `<span title="${date}" class="candycaneid candycaneid-${match}">${match}</span>`;
-    });
+    // if textContent is only the objectId, just add CSS classes to existing node
+    if (IS_OBJECT_ID.test(textContent)) {
+      const oid = textContent.toLowerCase();
+      uniqueIds.add(oid);
+      textNode.parentNode.classList.add('candycaneid',
+          `candycaneid-${oid}`);
+    } else {
+      // otherwise, create a new span around each objectId in the text
+      const coloredText = textContent.replace(CONTAINS_OBJECT_ID, (match) => {
+        const oid = match.toLowerCase();
+        uniqueIds.add(oid);
+        const timestamp = match.slice(0, 8); // 4 bytes
+        const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
+        return `<span title="${date}" class="candycaneid candycaneid-${oid}">${match}</span>`;
+      });
 
-    const newNode = document.createElement("span");
-    newNode.innerHTML = coloredText;
+      const newNode = document.createElement("span");
+      newNode.innerHTML = coloredText;
 
-    textNode.parentNode.replaceChild(newNode, textNode);
+      textNode.parentNode.replaceChild(newNode, textNode);
+    }
   });
   if (candyCaneIdEnabled) {
     generateCss([...uniqueIds]);
