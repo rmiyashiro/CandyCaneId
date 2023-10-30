@@ -249,7 +249,13 @@ function colorizeObjectIds(root) {
           `candycaneid-${oid}`);
     } else {
       // otherwise, create a new span around each objectId in the text
-      const coloredText = textContent.replace(CONTAINS_OBJECT_ID, (match) => {
+      const coloredText = textContent
+      // escape HTML markup because we'll be setting the text back as innerHTML
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      // replace all objectIds with styled spans
+      .replace(CONTAINS_OBJECT_ID, (match) => {
         const oid = match.toLowerCase();
         uniqueIds.add(oid);
         const timestamp = match.slice(0, 8); // 4 bytes
