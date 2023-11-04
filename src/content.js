@@ -241,8 +241,9 @@ function colorizeObjectIds(root) {
   const uniqueIds = new Set();
   const objectIds = collectObjectIds(root);
   objectIds.forEach(({textNode, textContent}) => {
-    // if textContent is only the objectId, just add CSS classes to existing node
-    if (IS_OBJECT_ID.test(textContent)) {
+    // if textNode contains only the objectId, just add CSS classes to existing node
+    if (textNode.parentNode?.children.length === 0 && IS_OBJECT_ID.test(
+        textContent)) {
       const oid = textContent.toLowerCase();
       uniqueIds.add(oid);
       textNode.parentNode.classList.add('candycaneid',
