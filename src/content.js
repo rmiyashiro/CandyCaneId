@@ -29,7 +29,7 @@ function generateCss(objectIds) {
       candyCaneIdStyles = document.createElement('style');
       candyCaneIdStyles.textContent = `:root { ${CSS_SATURATION}: 60%; ${CSS_LIGHTNESS}: 50%; ${CSS_ANGLE}: 110deg; ${CSS_BLUR}: 3%; ${CSS_TEXT}: white;}\n`
           +
-          `.candycaneid { color: var(${CSS_TEXT}) !important; border-radius: 2px; }\n`;
+          `.candycaneid { color: var(${CSS_TEXT}) !important; border-radius: 2px; width: fit-content; }\n`;
       document.head.appendChild(candyCaneIdStyles);
     }
     candyCaneIdStyles.textContent += objectIds.map(generateObjectIdCss).join(
