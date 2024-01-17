@@ -241,13 +241,24 @@ function colorizeObjectIds(root) {
   const uniqueIds = new Set();
   const objectIds = collectObjectIds(root);
   objectIds.forEach(({textNode, textContent}) => {
-    // if textNode contains only the objectId, just add CSS classes to existing node
+    // if textNode is a span and contains only the objectId, just add CSS classes to existing node
     if (textNode.parentNode?.children.length === 0 && IS_OBJECT_ID.test(
         textContent)) {
       const oid = textContent.toLowerCase();
       uniqueIds.add(oid);
-      textNode.parentNode.classList.add('candycaneid',
-          `candycaneid-${oid}`);
+      const timestamp = oid.slice(0, 8); // 4 bytes
+      const date = new Date(parseInt(timestamp, 16) * 1000); // Convert to milliseconds
+      if (textNode.parentNode?.nodeName === 'SPAN') {
+        textNode.parentNode.classList.add('candycaneid',
+            `candycaneid-${oid}`);
+        textNode.parentNode.title = date;
+      } else {
+        const newNode = document.createElement('span');
+        newNode.classList.add('candycaneid', `candycaneid-${oid}`)
+        newNode.title = date;
+        newNode.innerHTML = oid;
+        textNode.parentNode.replaceChild(newNode, textNode);
+      }
     } else {
       // otherwise, create a new span around each objectId in the text
       const coloredText = textContent
